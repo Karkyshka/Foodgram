@@ -1,11 +1,10 @@
 from django.http import HttpResponse
+from .models import *
+from django.shortcuts import render
+from rest_framework import viewsets
 
 
-def index(request):
-    return HttpResponse('Главная страница')
-
-
-def recipes(request):
+def RecipViewSet(viewsets.ModelViewSet):
     return HttpResponse('Список рецептов')
 
 

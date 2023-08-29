@@ -1,5 +1,5 @@
 # Рецепты:
-# http://localhost/api/recipes/ GET, PUT
+# http://localhost/recipes/ GET, PUT
 # http://localhost/api/recipes/{id}/ GET, PUT, DEL
 
 # Список покупок:
@@ -13,8 +13,8 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('', views.index, name='index'),
-    path('recipes/', views.recipes, name='recipes'),
+    path('', views.index, name='recipes'),
+    path('recipes/', views.index, name='recipes'),
     path('recipes/<int:id>', views.recipes_detail, name='recipes_detail'),
     path('recipes/download_shopping_cart',
          views.download_shopping_cart,
