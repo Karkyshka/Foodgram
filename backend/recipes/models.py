@@ -1,5 +1,5 @@
-from django.db import models
 from django.contrib.auth import get_user_model
+from django.db import models
 
 User = get_user_model()
 
@@ -16,6 +16,9 @@ class Ingredient(models.Model):
         verbose_name_plural = 'Ингредиенты'
         ordering = ('name',)
 
+    def __str__(self):
+        return self.name
+
 
 class Tag(models.Model):
     """Cписок тегов."""
@@ -29,6 +32,9 @@ class Tag(models.Model):
         verbose_name = 'Тег'
         verbose_name_plural = 'Теги'
         ordering = ('name',)
+
+    def __str__(self):
+        return self.name
 
 
 class Recipe(models.Model):
@@ -57,3 +63,6 @@ class Recipe(models.Model):
     class Meta:
         verbose_name = 'Рецепт'
         verbose_name_plural = 'Рецепты'
+
+    def __str__(self):
+        return self.name

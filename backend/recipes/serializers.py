@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from .models import Recipe
+
+from .models import Ingredient, Recipe, Tag
 
 
 class RecipeSerializer(serializers.ModelSerializer):
@@ -10,4 +11,16 @@ class RecipeSerializer(serializers.ModelSerializer):
     доступны на следующих страницах."""
     class Meta:
         model = Recipe
+        filed = '__all__'
+
+
+class TageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Tag
+        filed = '__all__'
+
+
+class IngredientSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Ingredient
         filed = '__all__'
