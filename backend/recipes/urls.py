@@ -9,9 +9,14 @@
 # Избранное:
 # http://localhost/api/recipes/{id}/favorite/ POST, DEL
 from django.urls import path
+from rest_framework.routers import DefaultRouter
+from .views import RecipeViewSet
 
-from . import views
+
+router = DefaultRouter()
+
+router.register('recipes', RecipeViewSet, basename='recipes')
 
 urlpatterns = [
-    path('', views.RecipeViewSet, name='recipes')
+    path('recipes', RecipeViewSet, name='recipes')
 ]

@@ -19,15 +19,16 @@ class Ingredient(models.Model):
 
 class Tag(models.Model):
     """Cписок тегов."""
-    name = models.TextField(verbose_name='Тег', max_length=200)
+    name = models.CharField(verbose_name='Тег', max_length=200)
     color = models.CharField(
         max_length=7, null=True
       )
-    slug = models.SlugField(unique=True, null=True)
+    slug = models.CharField(unique=True, null=True, max_length=200)
 
     class Meta:
         verbose_name = 'Тег'
         verbose_name_plural = 'Теги'
+        ordering = ('name',)
 
 
 class Recipe(models.Model):
@@ -56,6 +57,3 @@ class Recipe(models.Model):
     class Meta:
         verbose_name = 'Рецепт'
         verbose_name_plural = 'Рецепты'
-
-    def __init__(self):
-        return self.name
