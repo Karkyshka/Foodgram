@@ -13,14 +13,5 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('', views.index, name='recipes'),
-    path('recipes/', views.index, name='recipes'),
-    path('recipes/<int:id>', views.recipes_detail, name='recipes_detail'),
-    path('recipes/download_shopping_cart',
-         views.download_shopping_cart,
-         name='download_shopping_cart'),
-    path('recipes/<int:id>/shopping_cart',
-         views.shopping_cart,
-         name='shopping_cart'),
-    path('recipes/<int:id>/favorite', views.favorite, name='favorite')
+    path('', views.RecipeViewSet, name='recipes')
 ]
