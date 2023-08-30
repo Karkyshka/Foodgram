@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 
 
-"""class CustomUser(AbstractUser):
+class CustomUser(AbstractUser):
     email = models.EmailField(
         verbose_name='Адрес электронной почты', max_length=254,
     )
@@ -18,4 +18,3 @@ from django.contrib.auth.models import AbstractUser
     password = models.CharField(
         verbose_name='Пароль', max_length=150
     )
-"""
