@@ -4,6 +4,10 @@ from recipes.models import Ingredient, Recipe, Tag
 from .serializers import IngredientSerializer, RecipeSerializer, TageSerializer
 
 
+class UserViewSet(ModelViewSet):
+    pass
+
+
 class RecipeViewSet(ModelViewSet):
     # ReadOnlyModelViewSet
     queryset = Recipe.objects.all()
