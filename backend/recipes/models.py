@@ -8,10 +8,10 @@ User = get_user_model()
 class Ingredient(models.Model):
     """Список ингредиентов с возможностью поиска по имени."""
     name = models.CharField(
-        verbose_name='Ингредиент', max_length=200
+        verbose_name='Ингредиент', max_length=200, null=True
       )
     measurement_unit = models.CharField(
-        verbose_name='Единицы измерения', max_length=200
+        verbose_name='Единицы измерения', max_length=200, null=True
       )
 
     class Meta:
@@ -51,7 +51,7 @@ class Recipe(models.Model):
         auto_now_add=True
       )
     tags = models.ManyToManyField(
-        Tag, verbose_name='Теги'
+        Tag, verbose_name='Теги', null=True
       )
     author = models.ForeignKey(
         User, verbose_name='Автор рецета',
@@ -61,18 +61,17 @@ class Recipe(models.Model):
         Ingredient, verbose_name='Ингредиенты'
       )
     name = models.TextField(
-        verbose_name='Название блюда', max_length=200
+        verbose_name='Название блюда', max_length=200, null=True
       )
     cooking_time = models.PositiveSmallIntegerField(
-        verbose_name='Время готовки',
+        verbose_name='Время готовки', null=True,
         validators=[MinValueValidator(limit_value=1)]
       )
     text = models.TextField(
-        verbose_name='Описание рецепта'
+        verbose_name='Описание рецепта', null=True
       )
     image = models.ImageField(
         verbose_name='Фото блюда', null=True
-        # не забыть убрать null
       )
     is_favorited = models.BooleanField(null=True)
     is_in_shopping_cart = models.BooleanField(null=True)
