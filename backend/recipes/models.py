@@ -1,14 +1,17 @@
 from django.contrib.auth import get_user_model
 from django.db import models
+from django.core.validators import MaxValueValidator, MinValueValidator 
 
 User = get_user_model()
 
 
 class Ingredient(models.Model):
     """Список ингредиентов с возможностью поиска по имени."""
-    name = models.CharField(verbose_name='Ингредиент', max_length=10)
+    name = models.CharField(
+        verbose_name='Ингредиент', max_length=200
+      )
     measurement_unit = models.CharField(
-        verbose_name='Единицы измерения', max_length=3
+        verbose_name='Единицы измерения', max_length=200
       )
 
     class Meta:
@@ -22,11 +25,15 @@ class Ingredient(models.Model):
 
 class Tag(models.Model):
     """Cписок тегов."""
-    name = models.CharField(verbose_name='Тег', max_length=200)
+    name = models.CharField(
+        verbose_name='Тег', max_length=200
+      )
     color = models.CharField(
         max_length=7, null=True
       )
-    slug = models.CharField(unique=True, null=True, max_length=200)
+    slug = models.CharField(
+        unique=True, null=True, max_length=200
+      )
 
     class Meta:
         verbose_name = 'Тег'
@@ -40,23 +47,32 @@ class Tag(models.Model):
 class Recipe(models.Model):
     """Рецепты. Страница доступна всем пользователям.
     Доступна фильтрация по избранному, автору, списку покупок и тегам."""
-    pub_date = models.DateTimeField(auto_now_add=True)
-    tags = models.ManyToManyField(Tag, verbose_name='Теги')
+    pub_date = models.DateTimeField(
+        auto_now_add=True
+      )
+    tags = models.ManyToManyField(
+        Tag, verbose_name='Теги'
+      )
     author = models.ForeignKey(
         User, verbose_name='Автор рецета',
         on_delete=models.CASCADE, related_name='recipes', null=True
       )
     ingredients = models.ManyToManyField(
-        Ingredient, verbose_name='Ингредиенты', null=True
+        Ingredient, verbose_name='Ингредиенты'
       )
     name = models.TextField(
-        verbose_name='Название блюда', max_length=200, null=True
+        verbose_name='Название блюда', max_length=200
       )
     cooking_time = models.PositiveSmallIntegerField(
-        verbose_name='Время готовки', null=True
+        verbose_name='Время готовки',
+        validators=[MinValueValidator(limit_value=1)]
       )
-    text = models.TextField(verbose_name='Описание рецепта', null=True)
-    image = models.ImageField(null=True)
+    text = models.TextField(
+        verbose_name='Описание рецепта'
+      )
+    image = models.ImageField(
+        verbose_name='Фото блюда', null=True # не забыть убрать null
+      )
     is_favorited = models.BooleanField(null=True)
     is_in_shopping_cart = models.BooleanField(null=True)
 

@@ -1,7 +1,3 @@
-# Рецепты:
-# http://localhost/recipes/ GET, PUT
-# http://localhost/api/recipes/{id}/ GET, PUT, DEL
-
 # Список покупок:
 # http://localhost/api/recipes/download_shopping_cart/ GET
 # http://localhost/api/recipes/{id}/shopping_cart/ POST, DEL
