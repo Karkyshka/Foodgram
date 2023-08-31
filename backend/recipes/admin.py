@@ -17,4 +17,3 @@ class TagAdmin(ImportExportModelAdmin):
 @admin.register(Ingredient)
 class IngredientAdmin(ImportExportModelAdmin):
     pass
-
