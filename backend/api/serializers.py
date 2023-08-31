@@ -1,12 +1,12 @@
 from rest_framework import serializers
 
 from recipes.models import Ingredient, Recipe, Tag
-from user.models import User
+from user.models import CustomUser
 
 
 class CustomUserSerializer(serializers.ModelSerializer):
     class Meta:
-        model = User
+        model = CustomUser
         fields = '__all__'
 
 

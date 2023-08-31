@@ -1,12 +1,13 @@
 from rest_framework import serializers
+from djoser.serializers import UserCreateSerializer
 
-from .models import User
+from .models import CustomUser
 
 
-class CustomUserSerializers(serializers.ModelSerializer):
-    user = serializers.StringRelatedField()
+class CustomUserSerializers(UserCreateSerializer):
 
     class Meta:
-        model = User
+        model = CustomUser
         fields = '__all__'
+
 
