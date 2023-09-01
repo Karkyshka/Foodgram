@@ -9,5 +9,3 @@ class CustomUserSerializers(UserCreateSerializer):
     class Meta:
         model = CustomUser
         fields = '__all__'
-
-
