@@ -31,3 +31,14 @@ class CustomUser(AbstractUser):
         """Позволяет нам получить токен пользователя, вызвав `user.token`
         вместо user.generate_jwt_token()."""
         return self._generate_jwt_token()
+
+
+class Subscriber(models.Model):
+    user = models.ForeignKey(
+        CustomUser, on_delete=models.CASCADE,
+        verbose_name='Подптсчик', related_name='follower'
+    )
+    author = models.ForeignKey(
+        CustomUser, models.CASCADE,
+        verbose_name='Автор', related_name='following'
+    )

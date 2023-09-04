@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from drf_extra_fields.fields import Base64ImageField
 
 from recipes.models import Ingredient, Recipe, Tag
 from user.models import CustomUser
@@ -11,11 +12,8 @@ class CustomUserSerializer(serializers.ModelSerializer):
 
 
 class RecipeSerializer(serializers.ModelSerializer):
-    """Главная страница сайта. Содержимое главной — список
-    первых шести рецептов, отсортированных по дате публикации
-    «от новых к старым». На этой странице нужно реализовать
-    постраничную пагинацию. Остальные рецепты должны быть
-    доступны на следующих страницах."""
+    image = Base64ImageField()
+
     class Meta:
         model = Recipe
         fields = '__all__'

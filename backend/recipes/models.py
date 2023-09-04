@@ -13,6 +13,9 @@ class Ingredient(models.Model):
     measurement_unit = models.CharField(
         verbose_name='Единицы измерения', max_length=200, null=True
       )
+    amount = models.PositiveSmallIntegerField(
+        verbose_name='Количество ингредиента'
+      )
 
     class Meta:
         verbose_name = 'Ингредиент'
@@ -71,7 +74,7 @@ class Recipe(models.Model):
         verbose_name='Описание рецепта', null=True
       )
     image = models.ImageField(
-        verbose_name='Фото блюда', null=True
+        verbose_name='Фото блюда', upload_to='recipes/'
       )
     is_favorited = models.BooleanField(null=True)
     is_in_shopping_cart = models.BooleanField(null=True)
