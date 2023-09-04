@@ -1,9 +1,28 @@
 from django.contrib.auth import get_user_model
 from django.db import models
 from django.core.validators import MinValueValidator
+from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.models import ContentType
+from django.contrib.contenttypes.fields import GenericRelation
 
 User = get_user_model()
 
+class Fvorite(models.Model):
+  user = models.ForeignKey(User, on_delete=models.CASCADE)
+  content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+  object_id = models.PositiveIntegerField()
+  content_object = GenericForeignKey('content_type', 'object_id')
+
+  class Meta:
+        verbose_name = 'Избранное'
+        verbose_name_plural = 'Избранные'
+        ordering = ['-id']
+        constraints = [
+            models.UniqueConstraint(
+                fields=['user', 'object_id', 'content_type'],
+                name='unique_user_content_type_object_id'
+            )
+        ]
 
 class Ingredient(models.Model):
     """Список ингредиентов с возможностью поиска по имени."""
@@ -14,7 +33,7 @@ class Ingredient(models.Model):
         verbose_name='Единицы измерения', max_length=200, null=True
       )
     amount = models.PositiveSmallIntegerField(
-        verbose_name='Количество ингредиента'
+        verbose_name='Количество ингредиента', null=True
       )
 
     class Meta:
@@ -48,8 +67,8 @@ class Tag(models.Model):
 
 
 class Recipe(models.Model):
-    """Рецепты. Страница доступна всем пользователям.
-    Доступна фильтрация по избранному, автору, списку покупок и тегам."""
+    """Рецепты."""
+    favorites = GenericRelation('Favorite')
     pub_date = models.DateTimeField(
         auto_now_add=True
       )
@@ -74,14 +93,15 @@ class Recipe(models.Model):
         verbose_name='Описание рецепта', null=True
       )
     image = models.ImageField(
-        verbose_name='Фото блюда', upload_to='recipes/'
+        verbose_name='Фото блюда', upload_to='recipes/image/'
       )
-    is_favorited = models.BooleanField(null=True)
-    is_in_shopping_cart = models.BooleanField(null=True)
+  
+    is_in_shopping_cart = models.BooleanField()
 
     class Meta:
         verbose_name = 'Рецепт'
         verbose_name_plural = 'Рецепты'
+        ordering = ['-pub_date']
 
     def __str__(self):
         return self.name

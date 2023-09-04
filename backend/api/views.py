@@ -1,14 +1,38 @@
 from rest_framework.viewsets import ModelViewSet
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
+from rest_framework.decorators import action
 
 from recipes.models import Ingredient, Recipe, Tag
 from .serializers import IngredientSerializer, RecipeSerializer, TageSerializer
+from django.shortcuts import get_object_or_404
 
 
 class RecipeViewSet(ModelViewSet):
-    # ReadOnlyModelViewSet
-    queryset = Recipe.objects.all()
+    queryset = Recipe.objects.select_related('author').all()
     serializer_class = RecipeSerializer
+    filter_backends = [DjangoFilterBackend]
+    permission_classes = (IsAuthenticatedOrReadOnly)
     # pagination_class = PageNumberPagination
+
+    
+    @action(
+        methods=['post', 'delete'], detail=False,
+        permission_classes=IsAuthenticated
+    )
+    def favorite():
+        pass
+
+    @action(methods=['post', 'delete'], detail=False)
+    def shopping_cart():
+        pass
+
+    @action(detail=False)
+    def download_shopping_cart():
+        pass
+    
+
+
 
 
 class TagViewSet(ModelViewSet):
