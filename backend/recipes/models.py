@@ -7,22 +7,15 @@ from django.contrib.contenttypes.fields import GenericRelation
 
 User = get_user_model()
 
-class Fvorite(models.Model):
-  user = models.ForeignKey(User, on_delete=models.CASCADE)
-  content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
-  object_id = models.PositiveIntegerField()
-  content_object = GenericForeignKey('content_type', 'object_id')
+# class Fvorite(models.Model):
+#   user = models.ForeignKey(User, on_delete=models.CASCADE)
+#   content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+#   object_id = models.PositiveIntegerField()
+#   content_object = GenericForeignKey('content_type', 'object_id')
 
-  class Meta:
-        verbose_name = 'Избранное'
-        verbose_name_plural = 'Избранные'
-        ordering = ['-id']
-        constraints = [
-            models.UniqueConstraint(
-                fields=['user', 'object_id', 'content_type'],
-                name='unique_user_content_type_object_id'
-            )
-        ]
+#   class Meta:
+#         verbose_name = 'Избранное'
+#         verbose_name_plural = 'Избранные'
 
 class Ingredient(models.Model):
     """Список ингредиентов с возможностью поиска по имени."""
@@ -68,7 +61,7 @@ class Tag(models.Model):
 
 class Recipe(models.Model):
     """Рецепты."""
-    favorites = GenericRelation('Favorite')
+    # favorites = GenericRelation('Favorite')
     pub_date = models.DateTimeField(
         auto_now_add=True
       )
@@ -95,8 +88,6 @@ class Recipe(models.Model):
     image = models.ImageField(
         verbose_name='Фото блюда', upload_to='recipes/image/'
       )
-  
-    is_in_shopping_cart = models.BooleanField()
 
     class Meta:
         verbose_name = 'Рецепт'

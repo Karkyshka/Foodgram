@@ -6,7 +6,10 @@ from .models import Ingredient, Recipe, Tag
 
 @admin.register(Recipe)
 class RecipeAdmin(ImportExportModelAdmin):
-    pass
+    list_display= (
+        'id', 'author', 'name', 'text',
+        'cooking_time', 'pub_date'
+    )
 
 
 @admin.register(Tag)

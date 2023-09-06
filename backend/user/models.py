@@ -10,11 +10,9 @@ class CustomUser(AbstractUser):
     username = models.CharField(
         verbose_name='Уникальный юзернейм', max_length=150, unique=True,
     )
-
     password = models.CharField(
         verbose_name='Пароль', max_length=150
     )
-
     REQUIRED_FIELDS = ['username', 'first_name', 'last_name', ]
     USERNAME_FIELD = 'email'
 
@@ -34,11 +32,16 @@ class CustomUser(AbstractUser):
 
 
 class Subscriber(models.Model):
+    """Модель подписок"""
     user = models.ForeignKey(
         CustomUser, on_delete=models.CASCADE,
-        verbose_name='Подптсчик', related_name='follower'
+        verbose_name='Подписчик', related_name='follower'
     )
     author = models.ForeignKey(
         CustomUser, models.CASCADE,
-        verbose_name='Автор', related_name='following'
+        verbose_name='Автор рецептов', related_name='following'
     )
+
+    class Meta:
+        verbose_name = 'Подписчик'
+        verbose_name_plural = 'Подписки'
