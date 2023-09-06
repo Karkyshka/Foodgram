@@ -21,5 +21,5 @@ class UserAdmin(admin.ModelAdmin):
 @admin.register(Subscriber)
 class SubscriberAdmin(admin.ModelAdmin):
     list_display = (
-        'user', 'author',
+        'follower', 'following',
     )

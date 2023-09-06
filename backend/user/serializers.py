@@ -1,19 +1,21 @@
 from rest_framework import serializers
-from djoser.serializers import UserCreateSerializer
+from djoser.serializers import UserSerializer
+from django.contrib.auth import get_user_model
+from django.db.models import Count
 
-from .models import CustomUser, Subscriber
+from .models import Subscriber, CustomUser
 
+User = get_user_model
 
-class CustomUserSerializers(UserCreateSerializer):
-
+class CustomUserSerializers(UserSerializer):
+    
     class Meta:
         model = CustomUser
-        fields = ('__all__', 'following')
+        fields = '__all__'
 
 
-class SubscriberSerializers(serializers.Serializer):
-    follower = serializers.StringRelatedField(many=True, read_only=True)
+class SubscriberSerializers(UserSerializer):
 
     class Meta:
         model = Subscriber
-        fields = ('__all__', 'follower')
+        fields = '__all__'

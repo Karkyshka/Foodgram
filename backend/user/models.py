@@ -33,11 +33,11 @@ class CustomUser(AbstractUser):
 
 class Subscriber(models.Model):
     """Модель подписок"""
-    user = models.ForeignKey(
+    follower = models.ForeignKey(
         CustomUser, on_delete=models.CASCADE,
         verbose_name='Подписчик', related_name='follower'
     )
-    author = models.ForeignKey(
+    following = models.ForeignKey(
         CustomUser, models.CASCADE,
         verbose_name='Автор рецептов', related_name='following'
     )
