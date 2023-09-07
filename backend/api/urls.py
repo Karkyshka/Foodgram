@@ -1,9 +1,3 @@
-# Список покупок:
-# http://localhost/api/recipes/download_shopping_cart/ GET
-# http://localhost/api/recipes/{id}/shopping_cart/ POST, DEL
-
-# Избранное:
-# http://localhost/api/recipes/{id}/favorite/ POST, DEL
 from django.urls import path
 from rest_framework.routers import DefaultRouter
 

@@ -25,9 +25,6 @@ class Ingredient(models.Model):
     measurement_unit = models.CharField(
         verbose_name='Единицы измерения', max_length=200, null=True
       )
-    amount = models.PositiveSmallIntegerField(
-        verbose_name='Количество ингредиента', null=True
-      )
 
     class Meta:
         verbose_name = 'Ингредиент'
@@ -87,6 +84,10 @@ class Recipe(models.Model):
       )
     image = models.ImageField(
         verbose_name='Фото блюда', upload_to='recipes/image/'
+      )
+    
+    amount = models.PositiveSmallIntegerField(
+        verbose_name='Количество ингредиента', null=True
       )
 
     class Meta:

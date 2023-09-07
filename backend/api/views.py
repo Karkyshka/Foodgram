@@ -9,10 +9,11 @@ from django.shortcuts import get_object_or_404
 
 
 class RecipeViewSet(ModelViewSet):
+    """Работа с рецептами"""
     queryset = Recipe.objects.select_related('author').all()
     serializer_class = RecipeSerializer
-    filter_backends = [DjangoFilterBackend]
-    permission_classes = (IsAuthenticatedOrReadOnly)
+    # filter_backends = [DjangoFilterBackend]
+    # permission_classes = (IsAuthenticatedOrReadOnly)
     # pagination_class = PageNumberPagination
 
     
@@ -36,10 +37,12 @@ class RecipeViewSet(ModelViewSet):
 
 
 class TagViewSet(ModelViewSet):
+    """Информация о тегах"""
     queryset = Tag.objects.all()
     serializer_class = TageSerializer
 
 
 class IngredientViewSet(ModelViewSet):
+    """Информация об ингредиентах"""
     queryset = Ingredient.objects.all()
     serializer_class = IngredientSerializer
