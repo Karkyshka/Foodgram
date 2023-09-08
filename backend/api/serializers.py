@@ -28,6 +28,7 @@ class UserActionSerializer(UserSerializer):
 class IngredientSerializer(ModelSerializer):
     """Работа с ингедиентами."""
     id = serializers.IntegerField()
+    amount = serializers.IntegerField()
     class Meta:
         model = Ingredient
         fields = '__all__'
@@ -81,7 +82,11 @@ class RecipeActionializer(serializers.ModelSerializer):
             current_ingredient = get_object_or_404(
                 Ingredient,id=ingredient.get('id')
             )
-            ingredient_set.append(IngredientRecipe(recipe=recipe, ingredient=current_ingredient))
+            amount = ingredient.get('amount')
+            ingredient_set.append(IngredientRecipe(
+                recipe=recipe, ingredient=current_ingredient, amount=amount)
+            )
+            IngredientRecipe.objects.bulk_create(ingredient_set)
         return recipe 
         
     

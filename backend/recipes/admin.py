@@ -1,14 +1,14 @@
 from django.contrib import admin
 from import_export.admin import ImportExportModelAdmin
 
-from .models import Ingredient, Recipe, Tag
+from .models import Ingredient, Recipe, Tag, IngredientRecipe
 
 
 @admin.register(Recipe)
 class RecipeAdmin(ImportExportModelAdmin):
     list_display= (
         'id', 'author', 'name', 'text',
-        'cooking_time', 'pub_date'
+        'cooking_time', 'pub_date',
     )
 
 
@@ -20,3 +20,9 @@ class TagAdmin(ImportExportModelAdmin):
 @admin.register(Ingredient)
 class IngredientAdmin(ImportExportModelAdmin):
     pass
+
+
+@admin.register(IngredientRecipe)
+class IngredientAdmin(ImportExportModelAdmin):
+    list_display= (
+        'recipe', 'ingredient')
