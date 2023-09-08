@@ -1,56 +1,115 @@
-from rest_framework.viewsets import ModelViewSet
-from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.decorators import action
-# from api.permissions import IsAdminAuthorOrReadOnly
+from rest_framework.viewsets import ReadOnlyModelViewSet, ModelViewSet
+from rest_framework.permissions import AllowAny
 
-from recipes.models import Ingredient, Recipe, Tag
-from .serializers import IngredientSerializer, RecipeCreateSerializer, TageSerializer, RecipeListSerializer
-from django.shortcuts import get_object_or_404
+from recipes.models import Recipe, Ingredient, Tag
+from api.serializers import RecipeListSerializer
 
 
 class RecipeViewSet(ModelViewSet):
-    """Работа с рецептами"""
+    """Работа с рецептами.
+    При сериализации не записывает при POST:
+    - "tags": [],
+    - "author": null,
+    - "ingredients": [],
+    - "is_in_shopping_cart": null,
+    - "is_favorited": null"""
     queryset = Recipe.objects.select_related('author').all()
-    # serializer_class = RecipeListSerializer
-    filter_backends = [DjangoFilterBackend]
-    permission_classes = (IsAuthenticated,)
-    # pagination_class = PageNumberPagination
-
-    def get_serializer_class(self):
-        # Если запрошенное действие (action) — получение списка объектов ('list')
-        if self.action == ('list' or 'retrieve'):
-            # ...то применяем CatListSerializer
-            return RecipeListSerializer
-        # А если запрошенное действие — не 'list', применяем CatSerializer
-        return RecipeCreateSerializer
-    
-    @action(
-        methods=['post', 'delete'], detail=False,
-        permission_classes=IsAuthenticated
-    )
-    def favorite():
-        pass
-
-    @action(methods=['post', 'delete'], detail=False)
-    def shopping_cart():
-        pass
-
-    @action(detail=False)
-    def download_shopping_cart():
-        pass
-    
+    serializer_class = RecipeListSerializer 
 
 
 
-
-class TagViewSet(ModelViewSet):
+class TagViewSet(ReadOnlyModelViewSet):
     """Информация о тегах"""
     queryset = Tag.objects.all()
-    serializer_class = TageSerializer
+    # serializer_class = TagSerializer
+    permission_classes = [AllowAny]
 
 
-class IngredientViewSet(ModelViewSet):
-    """Информация об ингредиентах"""
+class IngredientViewSet(ReadOnlyModelViewSet):
+    """Информация об ингредиентах."""
     queryset = Ingredient.objects.all()
-    serializer_class = IngredientSerializer
+    # serializer_class = IngredientSerializer
+    permission_classes = [AllowAny]
+    # filter_backends = [DjangoFilterBackend]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
+# from django_filters.rest_framework import DjangoFilterBackend
+# from rest_framework.permissions import IsAuthenticated, AllowAny
+# from rest_framework.decorators import action
+
+# from recipes.models import Ingredient, Recipe, Tag
+# from api.serializers import IngredientSerializer, RecipeActionializer, TagSerializer, RecipeListSerializer
+
+# class RecipeActionViewSet(ModelViewSet):
+#     """Работа с рецептами"""
+#     queryset = Recipe.objects.select_related('author').all()
+#     # serializer_class = RecipeListSerializer
+#     filter_backends = [DjangoFilterBackend]
+#     permission_classes = (IsAuthenticated,)
+#     # pagination_class = PageNumberPagination
+
+#     def get_serializer_class(self):
+#         if self.action in ('list', 'retrieve'):
+#             return RecipeListSerializer
+#         return RecipeActionializer
+    
+#     @action(
+#         methods=['post', 'delete'], detail=False,
+#         permission_classes=IsAuthenticated
+#     )
+#     def shopping_cart():
+#         pass
+
+#     @action(
+#         methods=['get'], detail=False,
+#         permission_classes=IsAuthenticated
+#     )
+#     def download_shopping_cart():
+#         pass
+    
+
+
+# class RecipeViewSet(ModelViewSet):
+#     """Работа со списком рецептов"""
+#     queryset = Recipe.objects.select_related('author').all()
+#     serializer_class = RecipeListSerializer
+#     filter_backends = [DjangoFilterBackend]
+#     permission_classes = [IsAuthenticated]
+#     # pagination_class = PageNumberPagination
+
+# class TagViewSet(ReadOnlyModelViewSet):
+#     """Информация о тегах"""
+#     queryset = Tag.objects.all()
+#     serializer_class = TagSerializer
+#     permission_classes = [AllowAny]
+
+
+# class IngredientViewSet(ReadOnlyModelViewSet):
+#     """Информация об ингредиентах."""
+#     queryset = Ingredient.objects.all()
+#     serializer_class = IngredientSerializer
+#     permission_classes = [AllowAny]
+#     filter_backends = [DjangoFilterBackend]

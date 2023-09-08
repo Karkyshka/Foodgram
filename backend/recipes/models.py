@@ -7,23 +7,18 @@ from django.contrib.contenttypes.fields import GenericRelation
 
 User = get_user_model()
 
-# class Fvorite(models.Model):
-#   user = models.ForeignKey(User, on_delete=models.CASCADE)
-#   content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
-#   object_id = models.PositiveIntegerField()
-#   content_object = GenericForeignKey('content_type', 'object_id')
 
-#   class Meta:
-#         verbose_name = 'Избранное'
-#         verbose_name_plural = 'Избранные'
+
+
 
 class Ingredient(models.Model):
-    """Список ингредиентов с возможностью поиска по имени."""
+    """Список ингредиентов. Поиска по имени."""
+    # Данные об ингредиентах должны храниться в нескольких связанных таблицах.
     name = models.CharField(
-        verbose_name='Ингредиент', max_length=200, null=True
+        'Ингредиент', max_length=200
       )
     measurement_unit = models.CharField(
-        verbose_name='Единицы измерения', max_length=200, null=True
+        'Единицы измерения', max_length=200
       )
 
     class Meta:
@@ -36,15 +31,15 @@ class Ingredient(models.Model):
 
 
 class Tag(models.Model):
-    """Cписок тегов."""
+    """Cписок тегов. Поиск по тегу."""
     name = models.CharField(
-        verbose_name='Тег', max_length=200
+        'Тег', max_length=200, unique=True, null=True
       )
     color = models.CharField(
-        max_length=7, null=True
+        'Цвет', max_length=7, null=True, unique=True
       )
-    slug = models.CharField(
-        unique=True, null=True, max_length=200
+    slug = models.SlugField(
+        'Слаг', max_length=200, unique=True, null=True
       )
 
     class Meta:
@@ -58,7 +53,6 @@ class Tag(models.Model):
 
 class Recipe(models.Model):
     """Рецепты."""
-    # favorites = GenericRelation('Favorite')
     pub_date = models.DateTimeField(
         auto_now_add=True
       )
@@ -69,8 +63,10 @@ class Recipe(models.Model):
         User, verbose_name='Автор рецета',
         on_delete=models.CASCADE, related_name='recipes', null=True
       )
+    # Ингредиенты. Множественное поле с выбором из предустановленного
+    #  списка и с указанием количества и единицы измерения.
     ingredients = models.ManyToManyField(
-        Ingredient, verbose_name='Ингредиенты'
+        Ingredient, verbose_name='Ингредиенты', related_name='ingredients'
       )
     name = models.TextField(
         verbose_name='Название блюда', max_length=200, null=True
@@ -97,3 +93,24 @@ class Recipe(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class IngredientRecipe(models.Model):
+    recipe = models.ForeignKey(
+        Recipe,
+        on_delete=models.CASCADE,
+        related_name='ingredients_recipe',
+        verbose_name='Рецепт'
+
+    )
+    ingredient = models.ForeignKey(
+        Ingredient,
+        on_delete=models.CASCADE,
+        related_name='ingredients_recipe',
+        verbose_name='Ингредиент'
+    )
+    amount = models.IntegerField('Количество ингедиента')
+
+    class Meta:
+        verbose_name = 'Ингредиент в рецепте'
+        verbose_name_plural = 'Ингредиенты в рецепте'

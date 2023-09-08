@@ -5,8 +5,6 @@ from django.db.models import Count
 
 from .models import Subscriber, CustomUser
 
-User = get_user_model
-
 class CustomUserSerializers(UserSerializer):
     
     class Meta:
@@ -15,7 +13,15 @@ class CustomUserSerializers(UserSerializer):
 
 
 class SubscriberSerializers(UserSerializer):
+    """Добавление пользователей в подписчки"""
+    is_subscriber = serializers.SerializerMethodField()
 
     class Meta:
-        model = Subscriber
-        fields = '__all__'
+        model = CustomUser
+        fields = (
+            'email', 'id', 'username', 'first_name', 
+            'last_name', 'is_subscribed'
+            )
+    
+    def add_subscriber():
+        pass
