@@ -2,7 +2,7 @@ from rest_framework.viewsets import ReadOnlyModelViewSet, ModelViewSet
 from rest_framework.permissions import AllowAny
 
 from recipes.models import Recipe, Ingredient, Tag
-from api.serializers import RecipeListSerializer, RecipeActionializer
+from api.serializers import RecipeListSerializer, RecipeActionializer, IngredienSerializer
 
 
 class RecipeViewSet(ModelViewSet):
@@ -31,7 +31,7 @@ class TagViewSet(ReadOnlyModelViewSet):
 class IngredientViewSet(ReadOnlyModelViewSet):
     """Информация об ингредиентах."""
     queryset = Ingredient.objects.all()
-    # serializer_class = IngredientSerializer
+    serializer_class = IngredienSerializer
     permission_classes = [AllowAny]
     # filter_backends = [DjangoFilterBackend]
 

@@ -87,9 +87,7 @@ class Recipe(models.Model):
         verbose_name='Фото блюда', upload_to='recipes/image/'
       )
     
-    amount = models.PositiveSmallIntegerField(
-        verbose_name='Количество ингредиента', null=True
-      )
+    
 
     class Meta:
         verbose_name = 'Рецепт'
@@ -102,19 +100,16 @@ class Recipe(models.Model):
 
 class IngredientRecipe(models.Model):
     recipe = models.ForeignKey(
-        Recipe,
-        on_delete=models.CASCADE,
-        related_name='ingredients_recipe',
-        verbose_name='Рецепт'
-
-    )
+        Recipe, on_delete=models.CASCADE,
+        related_name='ingredients_recipe',verbose_name='Рецепт'
+      )
     ingredient = models.ForeignKey(
-        Ingredient,
-        on_delete=models.CASCADE,
-        related_name='ingredients_recipe',
-        verbose_name='Ингредиент'
-    )
-    amount = models.IntegerField('Количество ингедиента')
+        Ingredient, on_delete=models.CASCADE,
+        related_name='ingredients_recipe', verbose_name='Ингредиент'
+      )
+    amount = models.IntegerField(
+        verbose_name='Количество ингредиента', null=True
+      )
 
     class Meta:
         verbose_name = 'Ингредиент в рецепте'
