@@ -3,7 +3,7 @@ from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
 from django.shortcuts import get_object_or_404
 
-from recipes.models import Ingredient, Recipe, Tag, IngredientRecipe
+from recipes.models import Ingredient, Recipe, Tag, IngredientRecipe, CHOICES, ShoppingCart
 from user.serializers import CustomUserSerializers
 from user.models import CustomUser
 from djoser.serializers import UserSerializer
@@ -11,6 +11,7 @@ from djoser.serializers import UserSerializer
 
 class TagSerializer(ModelSerializer):
     """Работа с тегми."""
+    name = serializers.ChoiceField(choices=CHOICES)
     class Meta:
         model = Tag
         fields = '__all__'
@@ -24,9 +25,9 @@ class UserActionSerializer(UserSerializer):
         fields = '__all__'
 
 
-
 class IngredientSerializer(ModelSerializer):
     """Работа с ингедиентами."""
+    id = serializers.IntegerField()
     class Meta:
         model = Ingredient
         fields = '__all__'
@@ -35,8 +36,6 @@ class RecipeListSerializer(ModelSerializer):
     """Получение списка рецетов"""
     is_favorited = serializers.SerializerMethodField()
     is_in_shopping_cart = serializers.SerializerMethodField()
-
-
     ingredients = IngredientSerializer(many=True, read_only=True)
     author = CustomUserSerializers(read_only=True)
     tags = TagSerializer(many=True, read_only=True)
@@ -59,7 +58,9 @@ class RecipeListSerializer(ModelSerializer):
 class RecipeActionializer(serializers.ModelSerializer):
     """Работа с рецептами"""
     ingredients = IngredientSerializer(many=True) 
-    tags = TagSerializer(many=True, read_only=True)
+    tags = serializers.PrimaryKeyRelatedField(
+        queryset=Tag.objects.all(), many=True
+    )
     image = Base64ImageField()
 
     class Meta:
@@ -70,12 +71,6 @@ class RecipeActionializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         """Изменение записей в связных таблицах"""
-        # request = self.context.get('request')
-        # tag = Tag.objects.create()
-        # ingredients = Tag.objects.create()
-        # recipe.tags.set(tag, ingredients)
-        # recipe = Recipe.objects.create(author=request.user, **validated_data)
-        # return recipe
         ingredients = validated_data.pop('ingredients')
         tags = validated_data.pop('tags')
         request = self.context.get('request')
@@ -86,7 +81,7 @@ class RecipeActionializer(serializers.ModelSerializer):
             current_ingredient = get_object_or_404(
                 Ingredient,id=ingredient.get('id')
             )
-            ingredient_set.append(IngredientRecipe(recipe=recipe, ingredient=current_ingredient, tags=tags))
+            ingredient_set.append(IngredientRecipe(recipe=recipe, ingredient=current_ingredient))
         return recipe 
         
     

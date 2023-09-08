@@ -2,19 +2,22 @@ from rest_framework.viewsets import ReadOnlyModelViewSet, ModelViewSet
 from rest_framework.permissions import AllowAny
 
 from recipes.models import Recipe, Ingredient, Tag
-from api.serializers import RecipeListSerializer
+from api.serializers import RecipeListSerializer, RecipeActionializer
 
 
 class RecipeViewSet(ModelViewSet):
     """Работа с рецептами.
-    При сериализации не записывает при POST:
-    - "tags": [],
-    - "author": null,
+    При сериализации не записывает при POST и PATCH:
     - "ingredients": [],
     - "is_in_shopping_cart": null,
     - "is_favorited": null"""
     queryset = Recipe.objects.select_related('author').all()
-    serializer_class = RecipeListSerializer 
+    # serializer_class = RecipeListSerializer
+
+    def get_serializer_class(self):
+        if self.action in ('list', 'retrieve'):
+            return RecipeListSerializer
+        return RecipeActionializer
 
 
 

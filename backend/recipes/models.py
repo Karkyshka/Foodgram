@@ -6,7 +6,12 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericRelation
 
 User = get_user_model()
-
+CHOICES = (
+        ('breakfast', 'Завтрак'),
+        ('lunch', 'Обед'),
+        ('dinner', 'Ужин'),
+        ('snack', 'Перекус'),
+    )
 
 
 
@@ -15,10 +20,10 @@ class Ingredient(models.Model):
     """Список ингредиентов. Поиска по имени."""
     # Данные об ингредиентах должны храниться в нескольких связанных таблицах.
     name = models.CharField(
-        'Ингредиент', max_length=200
+        'Ингредиент', max_length=200, null=True
       )
     measurement_unit = models.CharField(
-        'Единицы измерения', max_length=200
+        'Единицы измерения', max_length=200, null=True
       )
 
     class Meta:
@@ -33,7 +38,7 @@ class Ingredient(models.Model):
 class Tag(models.Model):
     """Cписок тегов. Поиск по тегу."""
     name = models.CharField(
-        'Тег', max_length=200, unique=True, null=True
+        'Тег', max_length=200, unique=True
       )
     color = models.CharField(
         'Цвет', max_length=7, null=True, unique=True
@@ -114,3 +119,7 @@ class IngredientRecipe(models.Model):
     class Meta:
         verbose_name = 'Ингредиент в рецепте'
         verbose_name_plural = 'Ингредиенты в рецепте'
+
+
+class ShoppingCart(models.Model):
+    pass
