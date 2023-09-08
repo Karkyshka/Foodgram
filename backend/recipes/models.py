@@ -6,15 +6,6 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericRelation
 
 User = get_user_model()
-CHOICES = (
-        ('breakfast', 'Завтрак'),
-        ('lunch', 'Обед'),
-        ('dinner', 'Ужин'),
-        ('snack', 'Перекус'),
-    )
-
-
-
 
 class Ingredient(models.Model):
     """Список ингредиентов. Поиска по имени."""
