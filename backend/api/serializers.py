@@ -2,6 +2,7 @@ from rest_framework.serializers import ModelSerializer
 from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
 from django.shortcuts import get_object_or_404
+from django.db import transaction
 
 from recipes.models import Ingredient, Recipe, Tag, IngredientRecipe, ShoppingCart
 from user.serializers import CustomUserSerializers
@@ -34,6 +35,8 @@ class IngredienSerializer(ModelSerializer):
 
 
 class IngredientRecipeListSerializer(ModelSerializer):
+    """IngredientGetSerializer"""
+    """Сериализатор на просмотр рецептов.ТЕСТ"""
     id = serializers.IntegerField(read_only=True)
     name = serializers.CharField(read_only=True)
     measurement_unit = serializers.CharField(read_only=True)
@@ -43,6 +46,7 @@ class IngredientRecipeListSerializer(ModelSerializer):
         fields = ('id', 'name', 'measurement_unit', 'amount')
 
 class RecipeListSerializer(ModelSerializer):
+    
     """Получение списка рецетов"""
     tags = TagSerializer(many=True, read_only=True)
     author = CustomUserSerializers(read_only=True)
@@ -66,15 +70,14 @@ class RecipeListSerializer(ModelSerializer):
 
 
 class IngredientRecipeSerializer(ModelSerializer):
-    id = serializers.IntegerField(read_only=True)
-
-    
+    """IngredientPostSerializer"""
+    """Сериализатор на создание рецепта.ТЕСТ"""
+    id = serializers.IntegerField()
+    # amount = serializers.IntegerField()
     class Meta:
-        model = Ingredient
+        model = IngredientRecipe
         fields = ('id', 'amount')
 
-    def get_is_favorited(self,favorited):
-        pass
 
 class RecipeActionializer(serializers.ModelSerializer):
     """Работа с рецептами"""
@@ -83,13 +86,11 @@ class RecipeActionializer(serializers.ModelSerializer):
         queryset=Tag.objects.all(), many=True
     )
     image = Base64ImageField()
-
     class Meta:
         model = Recipe
-        fields = (
-            'tags', 'ingredients', 'name', 'image', 'text', 'cooking_time'
+        fields = ('ingredients', 'tags', 'image', 'name',  
+             'text', 'cooking_time'
             )
-
     def create(self, validated_data):
         """Изменение записей в связных таблицах"""
         ingredients = validated_data.pop('ingredients')
@@ -106,8 +107,8 @@ class RecipeActionializer(serializers.ModelSerializer):
             ingredient_set.append(IngredientRecipe(
                 recipe=recipe, ingredient=current_ingredient, amount=amount)
             )
-            IngredientRecipe.objects.bulk_create(ingredient_set)
-        return recipe 
+        IngredientRecipe.objects.bulk_create(ingredient_set)
+        return recipe
         
     
 

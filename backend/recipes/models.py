@@ -6,15 +6,6 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericRelation
 
 User = get_user_model()
-CHOICES = (
-        ('breakfast', 'Завтрак'),
-        ('lunch', 'Обед'),
-        ('dinner', 'Ужин'),
-        ('snack', 'Перекус'),
-    )
-
-
-
 
 class Ingredient(models.Model):
     """Список ингредиентов. Поиска по имени."""
@@ -71,7 +62,8 @@ class Recipe(models.Model):
     # Ингредиенты. Множественное поле с выбором из предустановленного
     #  списка и с указанием количества и единицы измерения.
     ingredients = models.ManyToManyField(
-        Ingredient, verbose_name='Ингредиенты', related_name='ingredients'
+        Ingredient,  through='IngredientRecipe',
+        verbose_name='Ингредиенты', related_name='ingredients'
       )
     name = models.TextField(
         verbose_name='Название блюда', max_length=200, null=True
