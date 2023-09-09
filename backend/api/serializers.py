@@ -35,8 +35,6 @@ class IngredienSerializer(ModelSerializer):
 
 
 class IngredientRecipeListSerializer(ModelSerializer):
-    """IngredientGetSerializer"""
-    """Сериализатор на просмотр рецептов.ТЕСТ"""
     id = serializers.IntegerField(read_only=True)
     name = serializers.CharField(read_only=True)
     measurement_unit = serializers.CharField(read_only=True)
@@ -70,10 +68,9 @@ class RecipeListSerializer(ModelSerializer):
 
 
 class IngredientRecipeSerializer(ModelSerializer):
-    """IngredientPostSerializer"""
-    """Сериализатор на создание рецепта.ТЕСТ"""
-    id = serializers.IntegerField()
-    # amount = serializers.IntegerField()
+    id = serializers.IntegerField(read_only=True)
+
+    
     class Meta:
         model = IngredientRecipe
         fields = ('id', 'amount')
