@@ -12,9 +12,10 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
-    'user.apps.UserConfig',
+    
     'api.apps.ApiConfig',
     'recipes.apps.RecipesConfig',
+    'user.apps.UserConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

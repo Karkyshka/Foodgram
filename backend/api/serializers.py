@@ -4,7 +4,8 @@ from rest_framework import serializers
 from django.shortcuts import get_object_or_404
 from django.db import transaction
 
-from recipes.models import Ingredient, Recipe, Tag, IngredientRecipe, ShoppingCart
+from recipes.models import (Ingredient, Recipe, Tag, IngredientRecipe,
+                            ShoppingCart)
 from user.serializers import CustomUserSerializers
 from user.models import CustomUser
 from djoser.serializers import UserSerializer
@@ -84,13 +85,15 @@ class RecipeActionializer(serializers.ModelSerializer):
         queryset=Tag.objects.all(), many=True
     )
     image = Base64ImageField()
+
     class Meta:
         model = Recipe
-        fields = ('ingredients', 'tags', 'image', 'name',  
-             'text', 'cooking_time'
-            )
+        fields = (
+            'ingredients', 'tags', 'image', 'name', 'text', 'cooking_time'
+        )
+
     def create(self, validated_data):
-        """Изменение записей в связных таблицах"""
+        """Добавление записей в связных таблицах"""
         ingredients = validated_data.pop('ingredients')
         tags = validated_data.pop('tags')
         request = self.context.get('request')
@@ -107,6 +110,19 @@ class RecipeActionializer(serializers.ModelSerializer):
             )
         IngredientRecipe.objects.bulk_create(ingredient_set)
         return recipe
+    
+    def update(self, instance, validated_data):
+        """Изменение записей в связных таблицах"""
+        ingredients_data = validated_data.pop('ingredientrecipe')
+        tags_data = validated_data.pop('tags')
+        ingredients = ingredients_data
+        tags = tags_data
+        instance.ingredients = validated_data(
+            'ingredientrecipe', instance.ingredients
+        )
+        instance.tags = ('tags', instance.tags)
+        instance.save(tags, ingredients)
+        return super().update(instance, validated_data)
         
     
 
