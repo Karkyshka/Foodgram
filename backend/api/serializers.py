@@ -44,11 +44,12 @@ class IngredientRecipeListSerializer(ModelSerializer):
         fields = ('id', 'name', 'measurement_unit', 'amount')
 
 class RecipeListSerializer(ModelSerializer):
-    
     """Получение списка рецетов"""
     tags = TagSerializer(many=True, read_only=True)
     author = CustomUserSerializers(read_only=True)
-    ingredients = IngredientRecipeListSerializer(many=True, read_only=True)
+    ingredients = IngredientRecipeListSerializer(
+        many=True, read_only=True, source='ingredientrecipe'
+    )
     is_favorited = serializers.SerializerMethodField()
     is_in_shopping_cart = serializers.SerializerMethodField()
     image = Base64ImageField()
