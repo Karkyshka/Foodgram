@@ -1,15 +1,15 @@
-# from django.contrib.auth import get_user_model
 # from django.db.models import Count
-# from django.shortcuts import get_object_or_404, redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 from djoser.views import UserViewSet
 # from recipes.models import Recipe
 from rest_framework.decorators import action
+from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
-# from rest_framework.response import Response
+from rest_framework.response import Response
 # from rest_framework.serializers import SlugRelatedField
 # from rest_framework.viewsets import ModelViewSet
 
-from .models import CustomUser
+from .models import CustomUser, Subscriber
 from .serializers import CustomUserSerializers, SubscriberSerializers
 
 
@@ -32,11 +32,17 @@ class CustomUserViewSet(UserViewSet):
 
     @action(
             methods=['POST', 'DELETE'],
-            detail=True,
-            permission_classes=[IsAuthenticated]
+            detail=True, permission_classes=[IsAuthenticated]
         )
-    def update_subscriber(self, request):
-        """Обновление статуса подписчика.
-        Авторизация по токену. Все запросы от имени пользователя должны 
-        выполняться с заголовком Authorization: Token TOKENVALUE"""
-        pass
+    # POST http://localhost/api/users/{id}/subscribe/
+    def subscribe(self, request, id):
+        """Обновление статуса подписчика."""
+        follower = request.user
+        following = get_object_or_404(CustomUser, pk=id)
+        if request.method == 'POST':
+            serialaizer = SubscriberSerializers(
+                following, data=request.data, context={'request': request}
+            )
+            serialaizer.is_valid()
+            Subscriber.objects.create(follower=follower, following=following)
+            return Response(serialaizer.data, status=status.HTTP_201_CREATED)
