@@ -3,7 +3,7 @@ from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
 from django.shortcuts import get_object_or_404
 from django.db import transaction
-from recipes.models import Ingredient, Recipe, Tag, IngredientRecipe, Favorite
+from recipes.models import Ingredient, Recipe, Tag, IngredientRecipe, Favorite, ShoppingCart
 from user.serializers import CustomUserSerializers
 from user.models import CustomUser
 from djoser.serializers import UserSerializer
@@ -30,7 +30,11 @@ class IngredienSerializer(ModelSerializer):
 
 
 
-
+class FavoriteSerializer(ModelSerializer):
+    """Работа с избранными рецептами"""
+    class Meta:
+        model = Favorite
+        fields = '__all__'
 
 
 class IngredientRecipeListSerializer(ModelSerializer):
@@ -59,8 +63,16 @@ class RecipeListSerializer(ModelSerializer):
             'is_in_shopping_cart', 'name', 'image', 'text', 'cooking_time'
         )
     
-    def get_is_in_shopping_cart(self, ingredient):
+    def get_is_in_shopping_cart(self, obj):
         """Список покупок"""
+        # request = self.context.get('request')
+        # recipe = (
+        #     request and request.user.is_authenticated 
+        #     and ShoppingCart.objects.filter(
+        #         user=request.user, recipe=obj
+        #         ).exists()
+        #     )
+        # return recipe
         pass
 
     def get_is_favorited(self, recipe):

@@ -2,9 +2,15 @@ from rest_framework.viewsets import ReadOnlyModelViewSet, ModelViewSet
 from rest_framework.permissions import AllowAny
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.decorators import action
+from django.shortcuts import get_object_or_404
+from django.http.response import HttpResponse
+from rest_framework.response import Response
+from rest_framework import status
 
-from recipes.models import Recipe, Ingredient, Tag
-from api.serializers import TagSerializer, RecipeListSerializer, RecipeActionializer, IngredienSerializer
+from recipes.models import Recipe, Ingredient, Tag, Favorite
+from api.serializers import (TagSerializer, RecipeListSerializer,
+                             RecipeActionializer, IngredienSerializer,
+                             FavoriteSerializer)
 
 
 class RecipeViewSet(ModelViewSet):
@@ -28,12 +34,29 @@ class RecipeViewSet(ModelViewSet):
     @action(methods=['post', 'delete'], detail=True)
     def shopping_cart(self, request, pk):
         """Добавление, удаление в список покупок."""
-        pass
     
     @action(methods=['post', 'delete'], detail=True)
+    # FavoriteSerializer
     def favorite(self, request, pk):
         """Добавление, удаление в избранное"""
-        pass
+        
+        if request.method == 'POST':
+            recipe = get_object_or_404(Recipe, id=pk)
+            context = {'request': request}
+            data = {
+                'user': request.user.id,
+                'recipe' : recipe.id
+            }
+            serializer = FavoriteSerializer(context=context, data=data)
+            serializer.is_valid()
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+        if request.method == "DELETE":
+            recipe = get_object_or_404(Recipe, id=pk)
+            get_object_or_404(
+                Favorite, user=request.user, recipe=recipe).delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class TagViewSet(ReadOnlyModelViewSet):
