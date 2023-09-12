@@ -28,13 +28,19 @@ class IngredienSerializer(ModelSerializer):
         model = Ingredient
         fields = '__all__'
 
-
-
 class FavoriteSerializer(ModelSerializer):
     """Работа с избранными рецептами"""
     class Meta:
         model = Favorite
         fields = '__all__'
+
+class ShoppingCartSerializer(ModelSerializer):
+    class Meta:
+        model = ShoppingCart
+        fields = ('__all__')
+
+
+
 
 
 class IngredientRecipeListSerializer(ModelSerializer):

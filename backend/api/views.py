@@ -7,10 +7,10 @@ from django.http.response import HttpResponse
 from rest_framework.response import Response
 from rest_framework import status
 
-from recipes.models import Recipe, Ingredient, Tag, Favorite
+from recipes.models import Recipe, Ingredient, Tag, Favorite, IngredientRecipe, ShoppingCart
 from api.serializers import (TagSerializer, RecipeListSerializer,
                              RecipeActionializer, IngredienSerializer,
-                             FavoriteSerializer)
+                             FavoriteSerializer, ShoppingCartSerializer)
 
 
 class RecipeViewSet(ModelViewSet):
@@ -34,12 +34,28 @@ class RecipeViewSet(ModelViewSet):
     @action(methods=['post', 'delete'], detail=True)
     def shopping_cart(self, request, pk):
         """Добавление, удаление в список покупок."""
+        if request.method == 'POST':
+            recipe = get_object_or_404(Recipe, id=pk)
+            context = {'request': request}
+            data = {
+                'user': request.user.id,
+                'recipe' : recipe.id
+            }
+            serializer = ShoppingCartSerializer(context=context, data=data)
+            serializer.is_valid()
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+        if request.method == "DELETE":
+            recipe = get_object_or_404(Recipe, id=pk)
+            get_object_or_404(
+                ShoppingCart, user=request.user, recipe=recipe).delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
     
     @action(methods=['post', 'delete'], detail=True)
     # FavoriteSerializer
     def favorite(self, request, pk):
-        """Добавление, удаление в избранное"""
-        
+        """Добавление, удаление в избранное"""  
         if request.method == 'POST':
             recipe = get_object_or_404(Recipe, id=pk)
             context = {'request': request}
