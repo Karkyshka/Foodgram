@@ -1,12 +1,13 @@
-from rest_framework.serializers import ModelSerializer
-from drf_extra_fields.fields import Base64ImageField
-from rest_framework import serializers
-from django.shortcuts import get_object_or_404
 from django.db import transaction
-from recipes.models import Ingredient, Recipe, Tag, IngredientRecipe, Favorite, ShoppingCart
-from user.serializers import CustomUserSerializers
-from user.models import CustomUser
+from django.shortcuts import get_object_or_404
 from djoser.serializers import UserSerializer
+from drf_extra_fields.fields import Base64ImageField
+from recipes.models import (Favorite, Ingredient, IngredientRecipe, Recipe,
+                            ShoppingCart, Tag)
+from rest_framework import serializers
+from rest_framework.serializers import ModelSerializer
+from user.models import CustomUser
+from user.serializers import CustomUserSerializers
 
 
 class TagSerializer(ModelSerializer):

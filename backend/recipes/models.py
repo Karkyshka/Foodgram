@@ -1,10 +1,11 @@
 from django.contrib.auth import get_user_model
-from django.db import models
-from django.core.validators import MinValueValidator
-from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.fields import (GenericForeignKey,
+                                                GenericRelation)
 from django.contrib.contenttypes.models import ContentType
-from django.contrib.contenttypes.fields import GenericRelation
+from django.core.validators import MinValueValidator
+from django.db import models
 from user.models import CustomUser
+
 
 class Ingredient(models.Model):
     """Список ингредиентов. Поиска по имени."""
