@@ -39,7 +39,7 @@ class RecipeViewSet(ModelViewSet):
             context = {'request': request}
             data = {
                 'user': request.user.id,
-                'recipe' : recipe.id
+                'recipe': recipe.id
             }
             serializer = ShoppingCartSerializer(context=context, data=data)
             serializer.is_valid()
@@ -51,7 +51,7 @@ class RecipeViewSet(ModelViewSet):
             get_object_or_404(
                 ShoppingCart, user=request.user, recipe=recipe).delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
-    
+
     @action(methods=['post', 'delete'], detail=True)
     # FavoriteSerializer
     def favorite(self, request, pk):

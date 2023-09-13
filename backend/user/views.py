@@ -46,3 +46,8 @@ class CustomUserViewSet(UserViewSet):
             serialaizer.is_valid()
             Subscriber.objects.create(follower=follower, following=following)
             return Response(serialaizer.data, status=status.HTTP_201_CREATED)
+        if request.method == 'DELETE':
+            get_object_or_404(
+                Subscriber, follower=follower, following=following
+            ).delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)

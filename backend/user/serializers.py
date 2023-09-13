@@ -27,7 +27,7 @@ class CustomUserSerializers(UserSerializer):
 
 class SubscriberSerializers(UserSerializer):
     """Получение списка подписок."""
-    is_subscribed = SerializerMethodField(read_only=True)
+    # is_subscribed = SerializerMethodField(read_only=True)
     recipes_count = SerializerMethodField()
     recipes = SerializerMethodField()
 
@@ -39,14 +39,14 @@ class SubscriberSerializers(UserSerializer):
         )
         read_only_fields = ('email', 'username', 'first_name', 'last_name')
 
-    def get_is_subscribed(self, obj):
-        request = self.context.get('request')
-        return Subscriber.objects.filter(
-            follower=request.user, following=obj
-        ).exists()
-    
+    # def get_is_subscribed(self, obj):
+    #     request = self.context.get('request')
+    #     return Subscriber.objects.filter(
+    #         follower=request.user, following=obj
+    #     ).exists()
+
     def get_recipes_count(self, obj):
         return obj.recipes.count()
 
     def get_recipes(self, obj):
-        pass
+        request
