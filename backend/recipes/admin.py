@@ -22,7 +22,8 @@ class IngredientAdmin(ImportExportModelAdmin):
 
 @admin.register(IngredientRecipe)
 class IngredientRecipe(ImportExportModelAdmin):
-    list_display = ('pk', 'recipe', 'ingredient', 'amount')
+    pass
+    # list_display = ('pk', 'recipe', 'ingrediens', 'amount')
 
 @admin.register(ShoppingCart)
 class ShoppingCartAdmin(admin.ModelAdmin):

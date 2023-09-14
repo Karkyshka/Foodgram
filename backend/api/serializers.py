@@ -147,7 +147,7 @@ class RecipeActionializer(serializers.ModelSerializer):
     # не хваатет еще сериализаторов?
     ingredients = IngredientRecipeSerializer(
         many=True, source='ingredientrecipe'
-    ) 
+    )
     tags = serializers.PrimaryKeyRelatedField(
         queryset=Tag.objects.all(), many=True
     )
@@ -160,25 +160,30 @@ class RecipeActionializer(serializers.ModelSerializer):
         )
 
 
+# table recipes_ingredientrecipe has no column named ingredients_id
     def create_ingredient(self, recipe, ingredients):
         ingredient_set = []
         for ingredient in ingredients:
+            current_ingredient = get_object_or_404(
+                Ingredient, id=ingredient.get('id')
+            )
+            amount = ingredient.get('amount')
             ingredient_set.append(
-                IngredientRecipe(ingredient=ingredient.pop('id')),
-                amount = ingredient.pop('amount'), recipe=recipe)
-            IngredientRecipe.objects.bulk_create(ingredient_set)
+                IngredientRecipe(
+                    ingredient=current_ingredient, amount=amount,
+                    recipe=recipe)
+                )
+        IngredientRecipe.objects.bulk_create(ingredient_set)
 
     def create(self, validated_data):
         """Добавление записей в связных таблицах"""
-        ingredients = validated_data.pop('ingredients')
+        ingredients = validated_data.pop('ingredientrecipe')
         tags = validated_data.pop('tags')
         request = self.context.get('request')
         recipe = Recipe.objects.create(author=request.user, **validated_data)
         recipe.tags.set(tags)
         self.create_ingredient(recipe, ingredients)
         return recipe
-
-    # Вынести в отдельную функцию?
 
     def update(self, instance, validated_data):
         """Изменение записей в связных таблицах"""
@@ -188,31 +193,8 @@ class RecipeActionializer(serializers.ModelSerializer):
         ingredients = validated_data.pop('ingredients')
         self.create_ingredient(instance, ingredients)
         return super().update(instance, validated_data)
-    
-        # ingredients = validated_data.pop('ingredients')
-        # tags = validated_data.pop('tags')
-        
-        # instance.tags.set(tags)
-        
-        # super().update(instance, validated_data)
-        # ingredient_set = []
-        # for ingredient in ingredients:
-        #     current_ingredient = get_object_or_404(
-        #         Ingredient,id=ingredient.get('id')
-        #     )
-        #     amount = ingredient.get('amount')
-        #     ingredient_set.append(IngredientRecipe(
-        #         recipe=instance, ingredient=current_ingredient, amount=amount)
-        #     )
-        #     IngredientRecipe.objects.bulk_create(ingredient_set)
-        # return instance
-        
+
     def to_representation(self, instance):
         return RecipeListSerializer(instance, context={
             'request': self.context.get('request')
         }).data
-
-
-
-
-
