@@ -25,12 +25,14 @@ class TagSerializer(ModelSerializer):
         model = Tag
         fields = '__all__'
 
+
 class UserActionSerializer(UserSerializer):
     """Работа с действиями юзера"""
 
     class Meta:
         model = CustomUser
         fields = '__all__'
+
 
 class IngredienSerializer(ModelSerializer):
     """Базовый сериализатор"""
@@ -106,7 +108,7 @@ class RecipeListSerializer(ModelSerializer):
             'id', 'tags', 'author', 'ingredients', 'is_favorited',
             'is_in_shopping_cart', 'name', 'image', 'text', 'cooking_time'
         )
-    
+
     def get_is_in_shopping_cart(self, obj):
         """Список покупок"""
         # request = self.context.get('request')
