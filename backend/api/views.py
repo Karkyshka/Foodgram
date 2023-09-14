@@ -11,14 +11,14 @@ from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 
 from api.serializers import (FavoriteSerializer, IngredienSerializer,
                              RecipeActionializer, RecipeListSerializer,
-                             ShoppingCartSerializer,
-                             TagSerializer)
-from recipes.models import (Favorite, Ingredient, Recipe,
-                            ShoppingCart, Tag)
-# IngredientRecipe
+                             ShoppingCartSerializer, TagSerializer)
+from recipes.models import Favorite, Ingredient, Recipe, ShoppingCart, Tag
 
 from .filter import IngredientFilter, RecipeFilter
 from .permission import AuthorPermission
+
+# IngredientRecipe
+
 
 
 class RecipeViewSet(ModelViewSet):
