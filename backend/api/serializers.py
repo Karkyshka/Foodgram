@@ -10,7 +10,6 @@ from user.models import CustomUser
 from user.serializers import CustomUserSerializers
 
 
-
 class RecipeSerializer(serializers.ModelSerializer):
     """Работа с рецептами.
     Избранное."""

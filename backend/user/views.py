@@ -1,16 +1,18 @@
 # from django.db.models import Count
 from django.shortcuts import get_object_or_404, redirect, render
 from djoser.views import UserViewSet
+from rest_framework import status
 # from recipes.models import Recipe
 from rest_framework.decorators import action
-from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-# from rest_framework.serializers import SlugRelatedField
-# from rest_framework.viewsets import ModelViewSet
 
 from .models import CustomUser, Subscriber
 from .serializers import CustomUserSerializers, SubscriberSerializers
+
+# from rest_framework.serializers import SlugRelatedField
+# from rest_framework.viewsets import ModelViewSet
+
 
 
 class CustomUserViewSet(UserViewSet):

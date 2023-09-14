@@ -1,12 +1,13 @@
 # from django.contrib.auth import get_user_model
 # from django.db.models import Count
 from django.forms import ValidationError
-from djoser.serializers import UserSerializer
-from rest_framework.serializers import SerializerMethodField, ModelSerializer
 from django.shortcuts import get_object_or_404
-from .models import CustomUser, Subscriber
-from rest_framework import status
+from djoser.serializers import UserSerializer
 from recipes.models import Recipe
+from rest_framework import status
+from rest_framework.serializers import ModelSerializer, SerializerMethodField
+
+from .models import CustomUser, Subscriber
 
 
 class RecipeSerializers(ModelSerializer):
