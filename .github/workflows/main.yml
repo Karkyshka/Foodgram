@@ -1,5 +1,5 @@
-
-name: Main Foogram workflow
+# .github/workflows/main.yml
+name: Main Taski workflow
 
 on:
   push:
