@@ -11,8 +11,10 @@ from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny, IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
-
-from .filter import IngredientFilter
+from rest_framework.pagination import PageNumberPagination
+from .filter import IngredientFilter, RecipeFilter
+from .permission import AuthorPermission
+from django.db.models import Sum
 
 
 class RecipeViewSet(ModelViewSet):
@@ -22,16 +24,27 @@ class RecipeViewSet(ModelViewSet):
     Добавлние в избранное/корзину.
     отправка файла."""
     queryset = Recipe.objects.select_related('author').all()
+    serializer_class = RecipeActionializer
+    permission_classes = [AuthorPermission]
+    pagination_class = PageNumberPagination
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = RecipeFilter
 
     def get_serializer_class(self):
         if self.action in ('list', 'retrieve'):
             return RecipeListSerializer
         return RecipeActionializer
 
-    @action(methods=['get'], detail=False)
+    @action(methods=['GET'], detail=False)
     def download_shopping_cart(self, request):
         """Скачать файл со списком покупок."""
-        pass
+        shopping_cart = 'Список покупок:'
+        ingredients = IngredientRecipe.objects.filter(
+            recipe__shoppingcart__user=request.user).values(
+                'ingredient__name', 'ingredient__measurement_unit'
+            ).annotate(amount=Sum('amount'))
+        # не отображается сам список
+        return Response(shopping_cart, content_type='text/plain')
 
     @action(methods=['post', 'delete'], detail=True)
     def shopping_cart(self, request, pk):
@@ -44,7 +57,7 @@ class RecipeViewSet(ModelViewSet):
                 'recipe': recipe.id
             }
             serializer = ShoppingCartSerializer(context=context, data=data)
-            serializer.is_valid()
+            serializer.is_valid(raise_exception=True)
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
@@ -55,7 +68,6 @@ class RecipeViewSet(ModelViewSet):
             return Response(status=status.HTTP_204_NO_CONTENT)
 
     @action(methods=['post', 'delete'], detail=True)
-    # FavoriteSerializer
     def favorite(self, request, pk):
         """Добавление, удаление в избранное"""  
         if request.method == 'POST':

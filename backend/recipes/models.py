@@ -57,7 +57,7 @@ class Recipe(models.Model):
       )
     author = models.ForeignKey(
         CustomUser, on_delete=models.CASCADE, verbose_name='Автор рецета',
-         related_name='recipes'
+        related_name='recipes'
       )
     # Ингредиенты. Множественное поле с выбором из предустановленного
     #  списка и с указанием количества и единицы измерения.
@@ -78,8 +78,6 @@ class Recipe(models.Model):
     image = models.ImageField(
         verbose_name='Фото блюда', upload_to='recipes/image/', blank=True
       )
-    
-    
 
     class Meta:
         verbose_name = 'Рецепт'
@@ -93,7 +91,7 @@ class Recipe(models.Model):
 class IngredientRecipe(models.Model):
     recipe = models.ForeignKey(
         Recipe, on_delete=models.CASCADE,
-        related_name='ingredientrecipe',verbose_name='Рецепт'
+        related_name='ingredientrecipe', verbose_name='Рецепт'
       )
     ingredient = models.ForeignKey(
         Ingredient, on_delete=models.CASCADE,
@@ -136,7 +134,6 @@ class Favorite(models.Model):
     class Meta:
         verbose_name = 'Избранное'
         verbose_name_plural = 'Избранное'
-    
+
     def __str__(self):
         return f'{self.recipe.name} в избранном'
-        
