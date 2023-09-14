@@ -8,7 +8,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.getenv('SECRET_KEY', default='django-insecure-16k2tp(6@u0!^tm_soqbqou8*bm(z!=c+j2ssk)f_#3l%0^4=3')
 # ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',')
-ALLOWED_HOSTS = ['karkyshka.ddns.net']
+ALLOWED_HOSTS = ['localhost', 'karkyshka.ddns.net']
 
 DEBUG = True
 # DEBUG = False
