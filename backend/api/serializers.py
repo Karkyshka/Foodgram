@@ -1,11 +1,11 @@
-from django.db import transaction
 from django.shortcuts import get_object_or_404
 from djoser.serializers import UserSerializer
 from drf_extra_fields.fields import Base64ImageField
-from recipes.models import (Favorite, Ingredient, IngredientRecipe, Recipe,
-                            ShoppingCart, Tag)
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
+
+from recipes.models import (Favorite, Ingredient, IngredientRecipe, Recipe,
+                            ShoppingCart, Tag)
 from user.models import CustomUser
 from user.serializers import CustomUserSerializers
 
@@ -113,7 +113,7 @@ class RecipeListSerializer(ModelSerializer):
         """Список покупок"""
         # request = self.context.get('request')
         # recipe = (
-        #     request and request.user.is_authenticated 
+        #     request and request.user.is_authenticated
         #     and ShoppingCart.objects.filter(
         #         user=request.user, recipe=obj
         #         ).exists()

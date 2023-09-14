@@ -1,5 +1,5 @@
 from django.contrib import admin
-from django.contrib.auth import get_user_model
+
 
 from .models import CustomUser, Subscriber
 
@@ -16,6 +16,7 @@ class UserAdmin(admin.ModelAdmin):
         'first_name', 'last_name', 'password',
         )
     search_fields = ('email', 'username', 'first_name', 'last_name')
+
 
 @admin.register(Subscriber)
 class SubscriberAdmin(admin.ModelAdmin):

@@ -3,9 +3,10 @@
 from django.forms import ValidationError
 from django.shortcuts import get_object_or_404
 from djoser.serializers import UserSerializer
-from recipes.models import Recipe
-from rest_framework import status
+# from rest_framework import status
 from rest_framework.serializers import ModelSerializer, SerializerMethodField
+
+from recipes.models import Recipe
 
 from .models import CustomUser, Subscriber
 
@@ -47,8 +48,6 @@ class SubscriberSerializers(UserSerializer):
             'last_name', 'is_subscribed', 'recipes', 'recipes_count'
         )
         # read_only_fields = ('email', 'username', 'first_name', 'last_name')
-
-        
         #     following_id = self.context.get(
         #         'request').parser_context.get('kwargs').get('id')
         #     following = get_object_or_404(CustomUser, id=following_id)
@@ -58,6 +57,7 @@ class SubscriberSerializers(UserSerializer):
         #     if user == following:
         #         raise ValidationError('Нельзя подписаться на самого себя')
         #     return data
+
         def validate(self, data):
             following_id = self.context.get(
                 'request').parser_context.get('kwargs').get('id')
