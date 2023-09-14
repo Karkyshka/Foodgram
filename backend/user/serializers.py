@@ -2,10 +2,19 @@
 # from django.db.models import Count
 from django.forms import ValidationError
 from djoser.serializers import UserSerializer
-from rest_framework.serializers import SerializerMethodField
+from rest_framework.serializers import SerializerMethodField, ModelSerializer
 from django.shortcuts import get_object_or_404
 from .models import CustomUser, Subscriber
 from rest_framework import status
+from recipes.models import Recipe
+
+
+class RecipeSerializers(ModelSerializer):
+    """Отображение рецептов в подписках"""
+    class Meta:
+        model = Recipe
+        fields = ('id', 'name', 'image', 'cooking_time')
+
 
 class CustomUserSerializers(UserSerializer):
     is_subscribed = SerializerMethodField()
@@ -17,11 +26,11 @@ class CustomUserSerializers(UserSerializer):
             'first_name', 'last_name', 'is_subscribed'
         )
 
-    # def get_is_subscribed(self, obj):
-    #     request = self.context.get('request')
-    #     return Subscriber.objects.filter(
-    #         follower=request.user, following=obj
-    #     ).exists()
+    def get_is_subscribed(self, obj):
+        request = self.context.get('request')
+        return Subscriber.objects.filter(
+            follower=request.user, following=obj
+        ).exists()
 
 
 class SubscriberSerializers(UserSerializer):
@@ -38,7 +47,16 @@ class SubscriberSerializers(UserSerializer):
         )
         # read_only_fields = ('email', 'username', 'first_name', 'last_name')
 
-      
+        
+        #     following_id = self.context.get(
+        #         'request').parser_context.get('kwargs').get('id')
+        #     following = get_object_or_404(CustomUser, id=following_id)
+        #     user = self.context.get('request').user
+        #     if user.follower.filter(following=following_id).exists():
+        #         raise ValidationError('Вы уже подписаны на автора')
+        #     if user == following:
+        #         raise ValidationError('Нельзя подписаться на самого себя')
+        #     return data
         def validate(self, data):
             following_id = self.context.get(
                 'request').parser_context.get('kwargs').get('id')
@@ -62,4 +80,13 @@ class SubscriberSerializers(UserSerializer):
         return obj.recipes.count()
 
     def get_recipes(self, obj):
-        pass
+        request = self.context.get('request')
+        recipes_limit = None
+        if request:
+            recipes_limit = request.query_params.get('recipes_limit')
+        recipes = obj.recipes.all()
+        if recipes_limit:
+            recipes = obj.recipes.all()[:int(recipes_limit)]
+        return RecipeSerializers(
+            recipes, many=True, context={'request': request}
+        ).data
