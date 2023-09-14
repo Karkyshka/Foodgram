@@ -124,11 +124,11 @@ class RecipeListSerializer(ModelSerializer):
     def get_is_favorited(self, recipe):
         request = self.context.get('request')
         favorite = (
-            request and request.user.is_authenticated 
+            request and request.user.is_authenticated
             and Favorite.objects.filter(
                 user=request.user, recipe=recipe
-                ).exists()
-            )
+            ).exists()
+        )
         return favorite
 
 
@@ -169,7 +169,7 @@ class RecipeActionializer(serializers.ModelSerializer):
                 IngredientRecipe(
                     ingredient=current_ingredient, amount=amount,
                     recipe=recipe)
-                )
+            )
         IngredientRecipe.objects.bulk_create(ingredient_set)
 
     def create(self, validated_data):

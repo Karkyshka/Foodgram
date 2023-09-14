@@ -13,10 +13,10 @@ class Ingredient(models.Model):
     # Данные об ингредиентах должны храниться в нескольких связанных таблицах.
     name = models.CharField(
         'Ингредиент', max_length=200
-      )
+    )
     measurement_unit = models.CharField(
         'Единицы измерения', max_length=200
-      )
+    )
 
     class Meta:
         verbose_name = 'Ингредиент'
@@ -31,13 +31,13 @@ class Tag(models.Model):
     """Cписок тегов. Поиск по тегу."""
     name = models.CharField(
         'Тег', max_length=200, unique=True
-      )
+    )
     color = models.CharField(
         'Цвет', max_length=7, unique=True
-      )
+    )
     slug = models.SlugField(
         'Слаг', max_length=200, unique=True
-      )
+    )
 
     class Meta:
         verbose_name = 'Тег'
@@ -52,33 +52,33 @@ class Recipe(models.Model):
     """Рецепты."""
     pub_date = models.DateTimeField(
         auto_now_add=True
-      )
+    )
     tags = models.ManyToManyField(
         Tag, verbose_name='Теги'
-      )
+    )
     author = models.ForeignKey(
         CustomUser, on_delete=models.CASCADE, verbose_name='Автор рецета',
         related_name='recipes'
-      )
+    )
     # Ингредиенты. Множественное поле с выбором из предустановленного
     #  списка и с указанием количества и единицы измерения.
     ingredients = models.ManyToManyField(
-        Ingredient,  through='IngredientRecipe',
+        Ingredient, through='IngredientRecipe',
         verbose_name='Ингредиенты'
-      )
+    )
     name = models.CharField(
         verbose_name='Название блюда', max_length=200
-      )
+    )
     cooking_time = models.PositiveSmallIntegerField(
         verbose_name='Время готовки',
         validators=[MinValueValidator(limit_value=1)]
-      )
+    )
     text = models.TextField(
         verbose_name='Описание рецепта'
-      )
+    )
     image = models.ImageField(
         verbose_name='Фото блюда', upload_to='recipes/image/', blank=True
-      )
+    )
 
     class Meta:
         verbose_name = 'Рецепт'
@@ -93,15 +93,15 @@ class IngredientRecipe(models.Model):
     recipe = models.ForeignKey(
         Recipe, on_delete=models.CASCADE,
         related_name='ingredientrecipe', verbose_name='Рецепт'
-      )
+    )
     ingredient = models.ForeignKey(
         Ingredient, on_delete=models.CASCADE,
         related_name='ingredientrecipe', verbose_name='Ингредиент'
-      )
+    )
     amount = models.IntegerField(
         verbose_name='Количество ингредиента',
         validators=[MinValueValidator(1)]
-      )
+    )
 
     class Meta:
         verbose_name = 'Ингредиент в рецепте'

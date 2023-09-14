@@ -28,13 +28,11 @@ class CustomUserViewSet(UserViewSet):
         page = self.paginate_queryset(queryset)
         serializes = SubscriberSerializers(
             page, many=True, context={'request': request}
-            )
+        )
         return self.get_paginated_response(serializes.data)
 
-    @action(
-            methods=['POST', 'DELETE'],
-            detail=True, permission_classes=[IsAuthenticated]
-        )
+    @action(methods=['POST', 'DELETE'],
+            detail=True, permission_classes=[IsAuthenticated])
     # POST http://localhost/api/users/{id}/subscribe/
     def subscribe(self, request, id):
         """Обновление статуса подписчика."""

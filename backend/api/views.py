@@ -1,20 +1,21 @@
-from django.db.models import Sum
-from django.http.response import HttpResponse
+# from django.db.models import Sum
+# from django.http.response import HttpResponse
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.pagination import PageNumberPagination
-from rest_framework.permissions import AllowAny, IsAuthenticatedOrReadOnly
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 
 from api.serializers import (FavoriteSerializer, IngredienSerializer,
                              RecipeActionializer, RecipeListSerializer,
-                             RecipeSerializer, ShoppingCartSerializer,
+                             ShoppingCartSerializer,
                              TagSerializer)
-from recipes.models import (Favorite, Ingredient, IngredientRecipe, Recipe,
+from recipes.models import (Favorite, Ingredient, Recipe,
                             ShoppingCart, Tag)
+# IngredientRecipe
 
 from .filter import IngredientFilter, RecipeFilter
 from .permission import AuthorPermission
@@ -42,10 +43,10 @@ class RecipeViewSet(ModelViewSet):
     def download_shopping_cart(self, request):
         """Скачать файл со списком покупок."""
         shopping_cart = 'Список покупок:'
-        ingredients = IngredientRecipe.objects.filter(
-            recipe__shoppingcart__user=request.user).values(
-                'ingredient__name', 'ingredient__measurement_unit'
-            ).annotate(amount=Sum('amount'))
+        # ingredients = IngredientRecipe.objects.filter(
+        #     recipe__shoppingcart__user=request.user).values(
+        #         'ingredient__name', 'ingredient__measurement_unit'
+        #     ).annotate(amount=Sum('amount'))
         # не отображается сам список
         return Response(shopping_cart, content_type='text/plain')
 
@@ -109,36 +110,14 @@ class IngredientViewSet(ReadOnlyModelViewSet):
     search_fields = ('^name', )
     pagination_class = None
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 # from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 # from django_filters.rest_framework import DjangoFilterBackend
 # from rest_framework.permissions import IsAuthenticated, AllowAny
 # from rest_framework.decorators import action
 
 # from recipes.models import Ingredient, Recipe, Tag
-# from api.serializers import IngredientSerializer, RecipeActionializer, TagSerializer, RecipeListSerializer
+# from api.serializers import IngredientSerializer,
+# RecipeActionializer, TagSerializer, RecipeListSerializer
 
 # class RecipeActionViewSet(ModelViewSet):
 #     """Работа с рецептами"""
@@ -152,7 +131,6 @@ class IngredientViewSet(ReadOnlyModelViewSet):
 #         if self.action in ('list', 'retrieve'):
 #             return RecipeListSerializer
 #         return RecipeActionializer
-    
 #     @action(
 #         methods=['post', 'delete'], detail=False,
 #         permission_classes=IsAuthenticated
@@ -166,9 +144,6 @@ class IngredientViewSet(ReadOnlyModelViewSet):
 #     )
 #     def download_shopping_cart():
 #         pass
-    
-
-
 # class RecipeViewSet(ModelViewSet):
 #     """Работа со списком рецептов"""
 #     queryset = Recipe.objects.select_related('author').all()
