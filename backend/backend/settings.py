@@ -9,7 +9,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.getenv('SECRET_KEY', default='django-insecure-16k2tp(6@u0!^tm_soqbqou8*bm(z!=c+j2ssk)f_#3l%0^4=3')
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',')
-# ALLOWED_HOSTS = ['localhost', 'karkyshka.ddns.net']
 
 DEBUG = True
 # DEBUG = False
@@ -107,18 +106,10 @@ REST_FRAMEWORK = {
 
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',
-        # 'rest_framework.authentication.BasicAuthentication',
-        # 'rest_framework.authentication.SessionAuthentication',
-        # 'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 6,
 }
-
-# SIMPLE_JWT = {
-#     'ACCESS_TOKEN_LIFETIME': timedelta(days=9999),
-#     'AUTH_HEADER_TYPES': ('Bearer',),
-# }
 
 LANGUAGE_CODE = 'ru-RU'
 
