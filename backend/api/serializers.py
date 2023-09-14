@@ -28,7 +28,7 @@ class TagSerializer(ModelSerializer):
 
 class UserActionSerializer(UserSerializer):
     """Работа с действиями юзера"""
-    
+
     class Meta:
         model = CustomUser
         fields = '__all__'
@@ -143,8 +143,6 @@ class IngredientRecipeSerializer(ModelSerializer):
 
 class RecipeActionializer(serializers.ModelSerializer):
     """Работа с рецептами. СОздание, редакторование"""
-    # добавление ингедиентов работать перестало
-    # не хваатет еще сериализаторов?
     ingredients = IngredientRecipeSerializer(
         many=True, source='ingredientrecipe'
     )
@@ -159,8 +157,6 @@ class RecipeActionializer(serializers.ModelSerializer):
             'ingredients', 'tags', 'image', 'name', 'text', 'cooking_time'
         )
 
-
-# table recipes_ingredientrecipe has no column named ingredients_id
     def create_ingredient(self, recipe, ingredients):
         ingredient_set = []
         for ingredient in ingredients:
