@@ -20,7 +20,6 @@ from .permission import AuthorPermission
 # IngredientRecipe
 
 
-
 class RecipeViewSet(ModelViewSet):
     """Работа с рецептами.
     Получение списка рецептов.
