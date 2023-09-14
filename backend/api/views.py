@@ -57,7 +57,7 @@ class RecipeViewSet(ModelViewSet):
                 'recipe': recipe.id
             }
             serializer = ShoppingCartSerializer(context=context, data=data)
-            serializer.is_valid(raise_exception=True)
+            serializer.is_valid()
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
@@ -69,7 +69,7 @@ class RecipeViewSet(ModelViewSet):
 
     @action(methods=['post', 'delete'], detail=True)
     def favorite(self, request, pk):
-        """Добавление, удаление в избранное"""  
+        """Добавление, удаление в избранное."""
         if request.method == 'POST':
             recipe = get_object_or_404(Recipe, id=pk)
             context = {'request': request}

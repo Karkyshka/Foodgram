@@ -10,6 +10,16 @@ from user.models import CustomUser
 from user.serializers import CustomUserSerializers
 
 
+
+class RecipeSerializer(serializers.ModelSerializer):
+    """Работа с рецептами.
+    Избранное."""
+
+    class Meta:
+        model = Recipe
+        fields = ('id', 'name', 'image', 'cooking_time')
+
+
 class TagSerializer(ModelSerializer):
     """Работа с тегми."""
     class Meta:
@@ -35,23 +45,36 @@ class FavoriteSerializer(ModelSerializer):
         model = Favorite
         fields = '__all__'
 
+
 class ShoppingCartSerializer(ModelSerializer):
+    """Работа со списком покупок"""
     class Meta:
         model = ShoppingCart
-        fields = ('__all__')
+        fields = '__all__'
 
+    def to_representation(self, instance):
+        return RecipeSerializer(
+            instance.recipe,
+            context={'request': self.context.get('request')}
+        ).data
 
-
+# валидация работает с ошибкой
+    def validate(self, data):
+        user = data['user']
+        if user.shoppingcart.filter(recipe=data['recipe']).exists():
+            raise serializers.ValidationError('Рецепт уже в корзине')
+        return data
 
 
 class IngredientRecipeListSerializer(ModelSerializer):
     id = serializers.IntegerField(read_only=True)
     name = serializers.CharField(read_only=True)
     measurement_unit = serializers.CharField(read_only=True)
-    
+
     class Meta:
         model = IngredientRecipe
         fields = ('id', 'name', 'measurement_unit', 'amount')
+
 
 class RecipeListSerializer(ModelSerializer):
     """Получение рецетов"""
@@ -63,6 +86,7 @@ class RecipeListSerializer(ModelSerializer):
     is_favorited = serializers.SerializerMethodField()
     is_in_shopping_cart = serializers.SerializerMethodField()
     image = Base64ImageField()
+
     class Meta:
         model = Recipe
         fields = (
@@ -91,6 +115,7 @@ class RecipeListSerializer(ModelSerializer):
                 ).exists()
             )
         return favorite
+
 
 class IngredientRecipeSerializer(ModelSerializer):
     """Добавление элемента."""
