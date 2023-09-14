@@ -8,9 +8,11 @@ from recipes.models import (Favorite, Ingredient, IngredientRecipe, Recipe,
                             ShoppingCart, Tag)
 from rest_framework import status
 from rest_framework.decorators import action
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
+
+from .filter import IngredientFilter
 
 
 class RecipeViewSet(ModelViewSet):
@@ -61,7 +63,7 @@ class RecipeViewSet(ModelViewSet):
             context = {'request': request}
             data = {
                 'user': request.user.id,
-                'recipe' : recipe.id
+                'recipe': recipe.id
             }
             serializer = FavoriteSerializer(context=context, data=data)
             serializer.is_valid()
@@ -79,15 +81,18 @@ class TagViewSet(ReadOnlyModelViewSet):
     """Информация о тегах"""
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    pagination_class = None
 
 
 class IngredientViewSet(ReadOnlyModelViewSet):
     """Информация об ингредиентах."""
     queryset = Ingredient.objects.all()
     serializer_class = IngredienSerializer
-    permission_classes = [AllowAny]
-    filter_backends = [DjangoFilterBackend]
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    filter_backends = [IngredientFilter]
+    search_fields = ('^name', )
+    pagination_class = None
 
 
 

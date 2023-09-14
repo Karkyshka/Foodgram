@@ -11,8 +11,8 @@ SECRET_KEY = os.getenv('SECRET_KEY', default='django-insecure-16k2tp(6@u0!^tm_so
 # ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',')
 ALLOWED_HOSTS = []
 
-# DEBUG = True
-DEBUG = False
+DEBUG = True
+# DEBUG = False
 
 INSTALLED_APPS = [
     'api.apps.ApiConfig',
