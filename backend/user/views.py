@@ -8,6 +8,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from .models import CustomUser, Subscriber
+from .pagination import CustomPagination
 from .serializers import CustomUserSerializers, SubscriberSerializers
 
 # from rest_framework.serializers import SlugRelatedField
@@ -17,7 +18,8 @@ from .serializers import CustomUserSerializers, SubscriberSerializers
 class CustomUserViewSet(UserViewSet):
     queryset = CustomUser.objects.all()
     serializer_class = CustomUserSerializers
-    #  pagination_class
+    pagination_class = CustomPagination
+    # permissions_class = AllowAny
 
     @action(detail=False, permission_classes=[IsAuthenticated])
     # GET http://localhost/api/users/subscriptions/
