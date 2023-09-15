@@ -18,6 +18,7 @@ from recipes.models import (Favorite, Ingredient, IngredientRecipe, Recipe,
 
 from .filter import IngredientFilter, RecipeFilter
 from .permission import AuthorPermission
+from user.pagination import CustomPagination
 
 
 class RecipeViewSet(ModelViewSet):
@@ -29,7 +30,7 @@ class RecipeViewSet(ModelViewSet):
     queryset = Recipe.objects.select_related('author').all()
     serializer_class = RecipeActionializer
     permission_classes = [AuthorPermission]
-    pagination_class = PageNumberPagination
+    pagination_class = CustomPagination
     filter_backends = [DjangoFilterBackend]
     filterset_class = RecipeFilter
 

@@ -38,7 +38,7 @@ class IngredienSerializer(ModelSerializer):
     """Базовый сериализатор"""
     class Meta:
         model = Ingredient
-        fields = '__all__'
+        fields = ('id', 'name', 'measurement_unit')
 
 
 class FavoriteSerializer(ModelSerializer):
@@ -187,7 +187,7 @@ class RecipeActionializer(serializers.ModelSerializer):
         instance.tags.clear()
         IngredientRecipe.objects.filter(recipe=instance).delete()
         instance.tags.set(validated_data.pop('tags'))
-        ingredients = validated_data.pop('ingredients')
+        ingredients = validated_data.pop('ingredientrecipe')
         self.create_ingredient(instance, ingredients)
         return super().update(instance, validated_data)
 
