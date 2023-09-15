@@ -60,8 +60,6 @@ class Recipe(models.Model):
         CustomUser, on_delete=models.CASCADE, verbose_name='Автор рецета',
         related_name='recipes'
     )
-    # Ингредиенты. Множественное поле с выбором из предустановленного
-    #  списка и с указанием количества и единицы измерения.
     ingredients = models.ManyToManyField(
         Ingredient, through='IngredientRecipe',
         verbose_name='Ингредиенты'

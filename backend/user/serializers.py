@@ -1,9 +1,6 @@
-# from django.contrib.auth import get_user_model
-# from django.db.models import Count
 from django.forms import ValidationError
 from django.shortcuts import get_object_or_404
 from djoser.serializers import UserSerializer
-# from rest_framework import status
 from rest_framework.serializers import ModelSerializer, SerializerMethodField
 
 from recipes.models import Recipe
