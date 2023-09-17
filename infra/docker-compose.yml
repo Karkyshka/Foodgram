@@ -1,4 +1,9 @@
 version: '3.3'
+volumes:
+  pg_data:
+  static:
+  media:
+
 services:
   db:
     image: postgres:13.0-alpine
@@ -6,42 +11,44 @@ services:
       - pg_data:/var/lib/postgresql/data/
     env_file:
       - .env
+    restart: always 
   
   backend:
     build:
       context: ../backend
       dockerfile: Dockerfile
+
     volumes:
-      - static_value:/app/static/
-      - media_value:/app/media/
+      - static:/app/static/
+      - media:/app/media/
     depends_on:
       - db
     env_file:
       - .env
     restart: always
-    container_name: foodgram_backend
+
 
   frontend:
     build:
       context: ../frontend
       dockerfile: Dockerfile
+    command: cp -r /app/frontend/build/. /app/static/ 
     volumes:
-      - ../frontend/:/app/result_build/
+      - static:/app/static/
+
   nginx:
     image: nginx:1.19.3
     ports:
       - "8000:80"
     volumes:
       - ./nginx.conf:/etc/nginx/conf.d/default.conf
-      - ../frontend/build:/usr/share/nginx/html/
-      - ../docs/:/usr/share/nginx/html/api/docs/
-      - static_value:/var/html/static/
-      - media_value:/var/html/media/
+      # - ./nginx.conf:/etc/nginx/sites-enabled/default.conf сервер
+      - ../frontend/build:/usr/share/nginx/app/
+      - ../docs/:/usr/share/nginx/app/api/docs/
+      - static:/app/static/
+      - media:/app/media/
     depends_on:
       - backend
-    container_name: foodgram_nginx
+      - frontend
+    restart: always
 
-volumes:
-  pg_data:
-  static_value:
-  media_value:
