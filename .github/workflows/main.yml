@@ -91,7 +91,7 @@ jobs:
             cd foodgram-project-react
             sudo docker-compose down
             sudo docker pull karkyshka/foodrgam_frontend:latest
-            sudo docker pull karkyshka/foodgram_backend:latest
+            sudo docker pull karkyshka/foodrgam_backend:latest
             touch .env
             echo DB_ENGINE=${{ secrets.DB_ENGINE }} >> .env
             echo DB_NAME=${{ secrets.DB_NAME }} >> .env
