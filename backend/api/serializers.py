@@ -20,22 +20,21 @@ class RecipeSerializer(serializers.ModelSerializer):
 
 
 class TagSerializer(ModelSerializer):
-    """Работа с тегми."""
+    """Работа с тегми. Используется в тегах."""
     class Meta:
         model = Tag
-        fields = '__all__'
+        fields = ('id', 'name', 'color', 'slug')
 
 
 class UserActionSerializer(UserSerializer):
     """Работа с действиями юзера"""
-
     class Meta:
         model = CustomUser
         fields = '__all__'
 
 
 class IngredienSerializer(ModelSerializer):
-    """Базовый сериализатор"""
+    """Базовый сериализатор. Используется в ингредиентах."""
     class Meta:
         model = Ingredient
         fields = ('id', 'name', 'measurement_unit')

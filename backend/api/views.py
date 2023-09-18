@@ -104,7 +104,7 @@ class TagViewSet(ReadOnlyModelViewSet):
     """Информация о тегах"""
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = (IsAuthenticatedOrReadOnly, )
     pagination_class = None
 
 
@@ -112,7 +112,7 @@ class IngredientViewSet(ReadOnlyModelViewSet):
     """Информация об ингредиентах."""
     queryset = Ingredient.objects.all()
     serializer_class = IngredienSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]
-    filter_backends = [IngredientFilter]
+    permission_classes = (IsAuthenticatedOrReadOnly,)
+    filter_backends = (IngredientFilter,)
     search_fields = ('^name', )
     pagination_class = None

@@ -11,18 +11,13 @@ from .models import CustomUser, Subscriber
 from .pagination import CustomPagination
 from .serializers import CustomUserSerializers, SubscriberSerializers
 
-# from rest_framework.serializers import SlugRelatedField
-# from rest_framework.viewsets import ModelViewSet
-
 
 class CustomUserViewSet(UserViewSet):
     queryset = CustomUser.objects.all()
     serializer_class = CustomUserSerializers
     pagination_class = CustomPagination
-    # permissions_class = AllowAny
 
     @action(detail=False, permission_classes=[IsAuthenticated])
-    # GET http://localhost/api/users/subscriptions/
     def subscriptions(self, request):
         """Просмотр ленты подписок."""
         user = request.user
@@ -35,7 +30,6 @@ class CustomUserViewSet(UserViewSet):
 
     @action(methods=['POST', 'DELETE'],
             detail=True, permission_classes=[IsAuthenticated])
-    # POST http://localhost/api/users/{id}/subscribe/
     def subscribe(self, request, id):
         """Обновление статуса подписчика."""
         follower = request.user
