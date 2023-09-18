@@ -1,5 +1,4 @@
 version: '3.3'
-
 volumes:
   pg_data:
   static:
@@ -24,18 +23,14 @@ services:
     env_file:
       - .env
     restart: always
-    # container_name: foodgram_backend
 
   frontend:
     image: karkyshka/foodrgam_frontend
     command: cp -r /app/build/. /app/static/ 
     volumes:
      - static:/app/static/
-    depends_on:
-      - backend
-    # command: cp -r /app/build/. /app/static/
-    # volumes:
-    #   - static:/app/static/
+    # depends_on:
+    #   - backend
   
   nginx:
     image: nginx:1.19.3
@@ -48,7 +43,7 @@ services:
       - ./nginx.conf:/etc/nginx/conf.d/default.conf
       - static:/app/static/ 
       - media:/app/media/ 
-    # depends_on:
-    #   - backend
-    #   - frontend
+    depends_on:
+      - backend
+      - frontend
     restart: always
