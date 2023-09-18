@@ -1,0 +1,42 @@
+version: '3.3'
+
+volumes:
+  pg_data:
+  static:
+  media:
+services:
+  db:
+    image: postgres:13.0-alpine
+    volumes:
+      - pg_data:/var/lib/postgresql/data/
+    env_file:
+      - .env
+  backend:
+    image: karkyshka/foodgram_backend
+    volumes:
+      - static:/app/static/
+      - media:/app/media/
+    depends_on:
+      - db
+    env_file:
+      - .env
+    restart: always
+    container_name: foodgram_backend
+
+  frontend:
+    image: karkyshka/foodrgam_frontend
+    command: cp -r /app/build/. /app/static/
+    volumes:
+      - static:/app/static/
+  
+  nginx:
+    image: nginx:1.19.3
+    ports:
+      - "8000:80"
+    volumes:
+      # - /nginx.conf:/etc/nginx/sites-enabled/default.conf
+      - static:/app/static/ 
+      - media:/app/media/ 
+    depends_on:
+      - backend
+    container_name: foodgram_nginx
