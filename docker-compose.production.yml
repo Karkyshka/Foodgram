@@ -14,7 +14,7 @@ services:
     restart: always 
 
   backend:
-    image: karkyshka/foodgram_backend
+    image: karkyshka/foodrgam_backend
     volumes:
       - static:/app/static/
       - media:/app/media/
@@ -29,18 +29,12 @@ services:
     command: cp -r /app/build/. /app/static/ 
     volumes:
      - static:/app/static/
-    # depends_on:
-    #   - backend
   
-  nginx:
-    image: nginx:1.19.3
+  gateway:
+    image: karkyshka/foodrgam_gateway
     ports:
       - "8000:80"
     volumes:
-      # - ./nginx.conf:/etc/nginx/sites-enabled/default.conf сервер
-      # - ../frontend/build:/usr/share/nginx/app/
-      # - ../docs/:/usr/share/nginx/app/api/docs/
-      - ./nginx.conf:/etc/nginx/conf.d/default.conf
       - static:/app/static/ 
       - media:/app/media/ 
     depends_on:
