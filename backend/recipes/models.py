@@ -4,7 +4,6 @@
 # from django.contrib.contenttypes.models import ContentType
 from django.core.validators import MinValueValidator
 from django.db import models
-
 from user.models import CustomUser
 
 
