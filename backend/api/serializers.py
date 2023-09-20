@@ -63,7 +63,7 @@ class ShoppingCartSerializer(ModelSerializer):
     """Работа со списком покупок"""
     class Meta:
         model = ShoppingCart
-        fields = '__all__'
+        fields = ('user', 'recipe')
 
     def to_representation(self, instance):
         return RecipeSerializer(
@@ -80,9 +80,14 @@ class ShoppingCartSerializer(ModelSerializer):
 
 
 class IngredientRecipeListSerializer(ModelSerializer):
-    id = serializers.IntegerField(read_only=True)
-    name = serializers.CharField(read_only=True)
-    measurement_unit = serializers.CharField(read_only=True)
+    """Ингредиенты в рецептах"""
+    id = serializers.PrimaryKeyRelatedField(
+        queryset=Ingredient.objects.all()
+    )
+    name = serializers.ReadOnlyField(source='ingredientrecipe.name')
+    measurement_unit = serializers.ReadOnlyField(
+        source='ingredientrecipe.measurement_unit'
+    )
 
     class Meta:
         model = IngredientRecipe
@@ -94,7 +99,7 @@ class RecipeListSerializer(ModelSerializer):
     tags = TagSerializer(many=True, read_only=True)
     author = CustomUserSerializers(read_only=True)
     ingredients = IngredientRecipeListSerializer(
-        many=True, read_only=True, source='ingredientrecipe'
+        many=True, source='ingredientrecipe', read_only=True
     )
     is_favorited = serializers.SerializerMethodField()
     is_in_shopping_cart = serializers.SerializerMethodField()
