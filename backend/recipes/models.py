@@ -11,7 +11,7 @@ class Ingredient(models.Model):
     """Список ингредиентов. Поиска по имени."""
     # Данные об ингредиентах должны храниться в нескольких связанных таблицах.
     name = models.CharField(
-        'Ингредиент', max_length=200, related_name='ingredients'
+        'Ингредиент', max_length=200
     )
     measurement_unit = models.CharField(
         'Единицы измерения', max_length=200

@@ -84,10 +84,9 @@ class IngredientRecipeListSerializer(ModelSerializer):
     id = serializers.PrimaryKeyRelatedField(
         queryset=Ingredient.objects.all()
     )
-    name = serializers.ReadOnlyField(source='ingredients.name')
-    # ingredientrecipe
+    name = serializers.ReadOnlyField(source='ingredient.name')
     measurement_unit = serializers.ReadOnlyField(
-        source='ingredients.measurement_unit'
+        source='ingredient.measurement_unit'
     )
     # measurement_unit = serializers.CharField(read_only=True)
 
@@ -142,14 +141,18 @@ class IngredientRecipeSerializer(ModelSerializer):
     """Добавление элемента."""
     id = serializers.IntegerField()
     amount = serializers.IntegerField()
+    # name = serializers.ReadOnlyField(source='ingredient.name')
+    # measurement_unit = serializers.ReadOnlyField(
+    #     source='ingredient.measurement_unit'
+    # )
 
     class Meta:
         model = IngredientRecipe
-        fields = ('id', 'amount')
+        fields = fields = ('id', 'amount')
 
 
 class RecipeActionializer(serializers.ModelSerializer):
-    """Работа с рецептами. СОздание, редакторование"""
+    """Работа с рецептами. Создание, редакторование"""
     ingredients = IngredientRecipeSerializer(
         many=True, source='ingredientrecipe'
     )
@@ -182,9 +185,9 @@ class RecipeActionializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         """Добавление записей в связных таблицах"""
+        request = self.context.get('request')
         ingredients = validated_data.pop('ingredientrecipe')
         tags = validated_data.pop('tags')
-        request = self.context.get('request')
         recipe = Recipe.objects.create(author=request.user, **validated_data)
         recipe.tags.set(tags)
         self.create_ingredient(recipe, ingredients)
