@@ -84,7 +84,8 @@ class IngredientRecipeListSerializer(ModelSerializer):
     id = serializers.PrimaryKeyRelatedField(
         queryset=Ingredient.objects.all()
     )
-    name = serializers.ReadOnlyField(source='ingredient.name') # ingredientrecipe
+    name = serializers.ReadOnlyField(source='ingredient.name')
+    # ingredientrecipe
     measurement_unit = serializers.ReadOnlyField(
         source='ingredient.measurement_unit'
     )
