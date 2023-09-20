@@ -84,10 +84,11 @@ class IngredientRecipeListSerializer(ModelSerializer):
     id = serializers.PrimaryKeyRelatedField(
         queryset=Ingredient.objects.all()
     )
-    name = serializers.ReadOnlyField(source='ingredientrecipe.name')
+    name = serializers.ReadOnlyField(source='ingredient.name') # ingredientrecipe
     measurement_unit = serializers.ReadOnlyField(
-        source='ingredientrecipe.measurement_unit'
+        source='ingredient.measurement_unit'
     )
+    # measurement_unit = serializers.CharField(read_only=True)
 
     class Meta:
         model = IngredientRecipe
@@ -99,7 +100,8 @@ class RecipeListSerializer(ModelSerializer):
     tags = TagSerializer(many=True, read_only=True)
     author = CustomUserSerializers(read_only=True)
     ingredients = IngredientRecipeListSerializer(
-        many=True, source='ingredientrecipe', read_only=True
+        many=True, source='ingredientrecipe'
+        # read_only=True,
     )
     is_favorited = serializers.SerializerMethodField()
     is_in_shopping_cart = serializers.SerializerMethodField()
