@@ -8,6 +8,11 @@ from .models import (Favorite, Ingredient, IngredientRecipe, Recipe,
 @admin.register(Recipe)
 class RecipeAdmin(ImportExportModelAdmin):
     list_display = ('pk', 'name', 'author')
+    list_filter = ('name', 'author', 'tags')
+
+    def get_favorites(self, obj):
+        return obj.favorites.count()
+    get_favorites.short_description = 'Избранное'
 
 
 @admin.register(Tag)
@@ -17,7 +22,8 @@ class TagAdmin(ImportExportModelAdmin):
 
 @admin.register(Ingredient)
 class IngredientAdmin(ImportExportModelAdmin):
-    pass
+    list_display = ('name', 'measurement_unit')
+    list_filter = ('name')
 
 
 @admin.register(IngredientRecipe)
