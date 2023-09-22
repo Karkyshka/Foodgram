@@ -44,7 +44,6 @@ class FavoriteSerializer(ModelSerializer):
         model = Favorite
         fields = '__all__'
 
-# валидация работает с ошибкой
     def validate(self, data):
         user = data['user']
         if user.favorite.filter(recipe=data['recipe']).exists():
@@ -70,7 +69,6 @@ class ShoppingCartSerializer(ModelSerializer):
             context={'request': self.context.get('request')}
         ).data
 
-# валидация работает с ошибкой
     def validate(self, data):
         user = data['user']
         if user.shoppingcart.filter(recipe=data['recipe']).exists():
@@ -119,6 +117,7 @@ class RecipeListSerializer(ModelSerializer):
         return obj.shoppingcart.filter(user=request.user).exists()
 
     def get_is_favorited(self, obj):
+        """Избранное"""
         request = self.context.get('request')
         return obj.favorite.filter(user=request.user).exists()
 
@@ -171,8 +170,8 @@ class RecipeActionializer(serializers.ModelSerializer):
         instance.tags.clear()
         IngredientRecipe.objects.filter(recipe=instance).delete()
         instance.tags.set(validated_data.pop('tags'))
-        ingredients = validated_data.pop('ingredientrecipe')
-        self.create_ingredient(instance, ingredients)
+        ingredients = validated_data.pop('ingredients')
+        self.create_ingredient(ingredients, instance)
         return super().update(instance, validated_data)
 
     def to_representation(self, instance):

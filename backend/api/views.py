@@ -50,10 +50,11 @@ class RecipeViewSet(ModelViewSet):
             name = ingredient['ingredient__name']
             unit = ingredient['ingredient__measurement_unit']
             amount = ingredient['ingredient_amount']
-            shopping_cart.append(f'\n{name} - {amount}, {unit}')
+            shopping_cart += (f'\n{name} - {amount}, {unit}')
+        file = 'shopping_cart.txt'
         response = HttpResponse(shopping_cart, content_type='text/plain')
         response['Content-Disposition'] = \
-            'attachment; filename="shopping_cart.txt"'
+            f'attachment; filename="{file}.txt"'
         return response
 
     @action(methods=['post', 'delete'], detail=True)
