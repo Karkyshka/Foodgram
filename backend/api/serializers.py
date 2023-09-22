@@ -1,4 +1,3 @@
-from django.shortcuts import get_object_or_404
 from djoser.serializers import UserSerializer
 from drf_extra_fields.fields import Base64ImageField
 from recipes.models import (Favorite, Ingredient, IngredientRecipe, Recipe,
@@ -141,21 +140,15 @@ class IngredientRecipeSerializer(ModelSerializer):
     """Добавление элемента."""
     id = serializers.IntegerField()
     amount = serializers.IntegerField()
-    # name = serializers.ReadOnlyField(source='ingredient.name')
-    # measurement_unit = serializers.ReadOnlyField(
-    #     source='ingredient.measurement_unit'
-    # )
 
     class Meta:
-        model = IngredientRecipe
-        fields = fields = ('id', 'amount')
+        model = Ingredient
+        fields = ('id', 'amount',)
 
 
 class RecipeActionializer(serializers.ModelSerializer):
     """Работа с рецептами. Создание, редакторование"""
-    ingredients = IngredientRecipeSerializer(
-        many=True, source='ingredientrecipe'
-    )
+    ingredients = IngredientRecipeSerializer(many=True)
     tags = serializers.PrimaryKeyRelatedField(
         queryset=Tag.objects.all(), many=True
     )
@@ -168,29 +161,23 @@ class RecipeActionializer(serializers.ModelSerializer):
         fields = (
             'ingredients', 'tags', 'image', 'author', 'text', 'cooking_time'
         )
+# ingredient_id=Ingredient.objects.get(id=ingredient.get('id')),
 
-    def create_ingredient(self, recipe, ingredients):
-        ingredient_set = []
+    def create_ingredient(self, ingredients, recipe):
         for ingredient in ingredients:
-            current_ingredient = get_object_or_404(
-                Ingredient, id=ingredient.get('id')
-            )
-            amount = ingredient.get('amount')
-            ingredient_set.append(
-                IngredientRecipe(
-                    ingredient=current_ingredient, amount=amount,
-                    recipe=recipe)
-            )
-        IngredientRecipe.objects.bulk_create(ingredient_set)
+            IngredientRecipe.objects.create(
+                recipe=recipe,
+                ingredient_id=ingredient.get('id'),
+                amount=ingredient.get('amount'), )
 
     def create(self, validated_data):
         """Добавление записей в связных таблицах"""
         request = self.context.get('request')
-        ingredients = validated_data.pop('ingredientrecipe')
+        ingredients = validated_data.pop('ingredients')
         tags = validated_data.pop('tags')
         recipe = Recipe.objects.create(author=request.user, **validated_data)
         recipe.tags.set(tags)
-        self.create_ingredient(recipe, ingredients)
+        self.create_ingredient(ingredients, recipe)
         return recipe
 
     def update(self, instance, validated_data):
