@@ -115,25 +115,12 @@ class RecipeListSerializer(ModelSerializer):
 
     def get_is_in_shopping_cart(self, obj):
         """Список покупок"""
-        # request = self.context.get('request')
-        # recipe = (
-        #     request and request.user.is_authenticated
-        #     and ShoppingCart.objects.filter(
-        #         user=request.user, recipe=obj
-        #         ).exists()
-        #     )
-        # return recipe
-        pass
-
-    def get_is_favorited(self, recipe):
         request = self.context.get('request')
-        favorite = (
-            request and request.user.is_authenticated
-            and Favorite.objects.filter(
-                user=request.user, recipe=recipe
-            ).exists()
-        )
-        return favorite
+        return obj.shoppingcart.filter(user=request.user).exists()
+
+    def get_is_favorited(self, obj):
+        request = self.context.get('request')
+        return obj.favorite.filter(user=request.user).exists()
 
 
 class IngredientRecipeSerializer(ModelSerializer):
@@ -161,7 +148,6 @@ class RecipeActionializer(serializers.ModelSerializer):
         fields = (
             'ingredients', 'tags', 'image', 'author', 'text', 'cooking_time'
         )
-# ingredient_id=Ingredient.objects.get(id=ingredient.get('id')),
 
     def create_ingredient(self, ingredients, recipe):
         for ingredient in ingredients:
