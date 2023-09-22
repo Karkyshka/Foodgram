@@ -22,8 +22,7 @@ class TagAdmin(ImportExportModelAdmin):
 
 @admin.register(Ingredient)
 class IngredientAdmin(ImportExportModelAdmin):
-    list_display = ('name', 'measurement_unit')
-    list_filter = ('name')
+    pass
 
 
 @admin.register(IngredientRecipe)
