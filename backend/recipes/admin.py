@@ -11,7 +11,7 @@ class RecipeAdmin(ImportExportModelAdmin):
     list_filter = ('name', 'author', 'tags')
 
     def get_favorites(self, obj):
-        return obj.favorites.count()
+        return obj.favorite.count()
     get_favorites.short_description = 'Избранное'
 
 
