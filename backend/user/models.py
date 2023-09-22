@@ -26,7 +26,7 @@ class CustomUser(AbstractUser):
 
     @property
     def token(self):
-        """Позволяет нам получить токен пользователя, вызвав `user.token`
+        """Позволяет получить токен пользователя, вызвав `user.token`
         вместо user.generate_jwt_token()."""
         return self._generate_jwt_token()
 

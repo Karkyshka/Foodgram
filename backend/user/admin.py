@@ -2,11 +2,6 @@ from django.contrib import admin
 
 from .models import CustomUser, Subscriber
 
-# admin.site.register(CustomUser)
-
-
-# User = get_user_model()
-
 
 @admin.register(CustomUser)
 class UserAdmin(admin.ModelAdmin):

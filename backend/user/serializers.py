@@ -41,16 +41,6 @@ class SubscriberSerializers(UserSerializer):
             'email', 'id', 'username', 'first_name',
             'last_name', 'is_subscribed', 'recipes', 'recipes_count'
         )
-        # read_only_fields = ('email', 'username', 'first_name', 'last_name')
-        #     following_id = self.context.get(
-        #         'request').parser_context.get('kwargs').get('id')
-        #     following = get_object_or_404(CustomUser, id=following_id)
-        #     user = self.context.get('request').user
-        #     if user.follower.filter(following=following_id).exists():
-        #         raise ValidationError('Вы уже подписаны на автора')
-        #     if user == following:
-        #         raise ValidationError('Нельзя подписаться на самого себя')
-        #     return data
 
         def validate(self, data):
             following_id = self.context.get(
