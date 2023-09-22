@@ -98,7 +98,6 @@ class RecipeListSerializer(ModelSerializer):
     author = CustomUserSerializers(read_only=True)
     ingredients = IngredientRecipeListSerializer(
         many=True, source='ingredientrecipe'
-        # read_only=True,
     )
     is_favorited = serializers.SerializerMethodField()
     is_in_shopping_cart = serializers.SerializerMethodField()
@@ -141,7 +140,6 @@ class RecipeActionializer(serializers.ModelSerializer):
     image = Base64ImageField()
     author = UserSerializer(read_only=True)
     cooking_time = serializers.IntegerField()
-    # name = serializers.CharField()
 
     class Meta:
         model = Recipe
