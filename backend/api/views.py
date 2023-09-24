@@ -109,7 +109,7 @@ class TagViewSet(ReadOnlyModelViewSet):
 
 class IngredientViewSet(ReadOnlyModelViewSet):
     """Информация об ингредиентах."""
-    queryset = Ingredient.objects.all()
+    queryset = Ingredient.objects.select_related('recipes').all()
     serializer_class = IngredienSerializer
     permission_classes = (IsAuthenticatedOrReadOnly,)
     filter_backends = (IngredientFilter,)

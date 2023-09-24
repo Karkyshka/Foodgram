@@ -51,7 +51,7 @@ class Recipe(models.Model):
         auto_now_add=True
     )
     tags = models.ManyToManyField(
-        Tag, related_name='tags', verbose_name='Теги'
+        Tag, related_name='recipes', verbose_name='Теги'
     )
     author = models.ForeignKey(
         CustomUser, on_delete=models.CASCADE, verbose_name='Автор рецета',
@@ -59,7 +59,7 @@ class Recipe(models.Model):
     )
     ingredients = models.ManyToManyField(
         Ingredient, through='IngredientRecipe',
-        verbose_name='Ингредиенты'
+        verbose_name='Ингредиенты', related_name='recipes'
     )
     name = models.CharField(
         verbose_name='Название блюда', max_length=200
