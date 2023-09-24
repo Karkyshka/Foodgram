@@ -8,6 +8,13 @@ from user.models import CustomUser
 from user.serializers import CustomUserSerializers
 
 
+class RecipeSubscriberSerializers(ModelSerializer):
+    """Отображение рецептов в подписках"""
+    class Meta:
+        model = Recipe
+        fields = ('id', 'name', 'image', 'cooking_time')
+
+
 class RecipeSerializer(serializers.ModelSerializer):
     """Работа с рецептами.
     Избранное."""
