@@ -1,17 +1,10 @@
 from django.forms import ValidationError
 from django.shortcuts import get_object_or_404
 from djoser.serializers import UserSerializer
-from recipes.models import Recipe
-from rest_framework.serializers import ModelSerializer, SerializerMethodField
+from rest_framework.serializers import SerializerMethodField
 
 from .models import CustomUser, Subscriber
-
-
-class RecipeSerializers(ModelSerializer):
-    """Отображение рецептов в подписках"""
-    class Meta:
-        model = Recipe
-        fields = ('id', 'name', 'image', 'cooking_time')
+from api import serializers
 
 
 class CustomUserSerializers(UserSerializer):
@@ -72,6 +65,6 @@ class SubscriberSerializers(UserSerializer):
         recipes = obj.recipes.all()
         if recipes_limit:
             recipes = obj.recipes.all()[:int(recipes_limit)]
-        return RecipeSerializers(
+        return serializers.RecipeSubscriberSerializers(
             recipes, many=True, context={'request': request}
         ).data

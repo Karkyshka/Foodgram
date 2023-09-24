@@ -4,8 +4,16 @@ from recipes.models import (Favorite, Ingredient, IngredientRecipe, Recipe,
                             ShoppingCart, Tag)
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
+
 from user.models import CustomUser
 from user.serializers import CustomUserSerializers
+
+
+class RecipeSubscriberSerializers(ModelSerializer):
+    """Отображение рецептов в подписках"""
+    class Meta:
+        model = Recipe
+        fields = ('id', 'name', 'image', 'cooking_time')
 
 
 class RecipeSerializer(serializers.ModelSerializer):
