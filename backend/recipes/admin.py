@@ -5,10 +5,17 @@ from .models import (Favorite, Ingredient, IngredientRecipe, Recipe,
                      ShoppingCart, Tag)
 
 
+class IngredientInline(admin.TabularInline):
+    model = IngredientRecipe
+    extra = 3
+    min_num = 1
+
+
 @admin.register(Recipe)
 class RecipeAdmin(ImportExportModelAdmin):
     list_display = ('pk', 'name', 'author')
     list_filter = ('name', 'author', 'tags')
+    inlines = [IngredientInline]
 
     def get_favorites(self, obj):
         return obj.favorite.count()

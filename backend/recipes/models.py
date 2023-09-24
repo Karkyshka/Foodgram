@@ -1,6 +1,7 @@
 from django.core.validators import MinValueValidator
 from django.db import models
 from user.models import CustomUser
+from colorfield.fields import ColorField
 
 
 class Ingredient(models.Model):
@@ -26,9 +27,11 @@ class Tag(models.Model):
     name = models.CharField(
         'Тег', max_length=200, unique=True
     )
-    color = models.CharField(
-        'Цвет', max_length=7, unique=True
+    color = ColorField(
+        verbose_name='HEX-код', format='hex',
+        max_length=7, unique=True
     )
+
     slug = models.SlugField(
         'Слаг', max_length=200, unique=True
     )
@@ -48,7 +51,7 @@ class Recipe(models.Model):
         auto_now_add=True
     )
     tags = models.ManyToManyField(
-        Tag, verbose_name='Теги'
+        Tag, related_name='tags', verbose_name='Теги'
     )
     author = models.ForeignKey(
         CustomUser, on_delete=models.CASCADE, verbose_name='Автор рецета',
@@ -102,10 +105,10 @@ class IngredientRecipe(models.Model):
 
 class ShoppingCart(models.Model):
     user = models.ForeignKey(
-        CustomUser, on_delete=models.CASCADE, related_name='shoppingcart'
+        CustomUser, on_delete=models.CASCADE, related_name='shoppingcarts'
     )
     recipe = models.ForeignKey(
-        Recipe, on_delete=models.CASCADE, related_name='shoppingcart'
+        Recipe, on_delete=models.CASCADE, related_name='shoppingcarts'
     )
 
     class Meta:

@@ -101,7 +101,7 @@ class RecipeViewSet(ModelViewSet):
 
 class TagViewSet(ReadOnlyModelViewSet):
     """Информация о тегах"""
-    queryset = Tag.objects.all()
+    queryset = Tag.objects.select_related('recipes').all()
     serializer_class = TagSerializer
     permission_classes = (IsAuthenticatedOrReadOnly, )
     pagination_class = None
