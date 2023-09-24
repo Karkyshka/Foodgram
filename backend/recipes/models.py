@@ -1,9 +1,6 @@
 from django.core.validators import MinValueValidator
 from django.db import models
-
 from user.models import CustomUser
-
-# from colorfield.fields import ColorField
 
 
 class Ingredient(models.Model):
@@ -32,7 +29,6 @@ class Tag(models.Model):
     color = models.CharField(
         'Цвет', max_length=7, unique=True
     )
-
     slug = models.SlugField(
         'Слаг', max_length=200, unique=True
     )
@@ -60,7 +56,7 @@ class Recipe(models.Model):
     )
     ingredients = models.ManyToManyField(
         Ingredient, through='IngredientRecipe',
-        verbose_name='Ингредиенты', related_name='recipes'
+        verbose_name='Ингредиенты'
     )
     name = models.CharField(
         verbose_name='Название блюда', max_length=200

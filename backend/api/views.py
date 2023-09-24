@@ -1,19 +1,18 @@
+from api.serializers import (FavoriteSerializer, IngredienSerializer,
+                             RecipeActionializer, RecipeListSerializer,
+                             ShoppingCartSerializer, TagSerializer)
 from django.db.models import Sum
 from django.http.response import HttpResponse
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
+from recipes.models import (Favorite, Ingredient, IngredientRecipe, Recipe,
+                            ShoppingCart, Tag)
 from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.permissions import (AllowAny, IsAuthenticated,
                                         IsAuthenticatedOrReadOnly)
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
-
-from api.serializers import (FavoriteSerializer, IngredienSerializer,
-                             RecipeActionializer, RecipeListSerializer,
-                             ShoppingCartSerializer, TagSerializer)
-from recipes.models import (Favorite, Ingredient, IngredientRecipe, Recipe,
-                            ShoppingCart, Tag)
 from user.pagination import CustomPagination
 
 from .filter import IngredientFilter, RecipeFilter
@@ -102,8 +101,7 @@ class RecipeViewSet(ModelViewSet):
 
 class TagViewSet(ReadOnlyModelViewSet):
     """Информация о тегах"""
-    queryset = Tag.objects.prefetch_related('author').all()
-    # queryset = Tag.objects.all()
+    queryset = Tag.objects.all()
     serializer_class = TagSerializer
     permission_classes = (IsAuthenticatedOrReadOnly, )
     pagination_class = None
@@ -111,8 +109,7 @@ class TagViewSet(ReadOnlyModelViewSet):
 
 class IngredientViewSet(ReadOnlyModelViewSet):
     """Информация об ингредиентах."""
-    queryset = Ingredient.objects.prefetch_related('author').all()
-    # queryset = Ingredient.objects.all()
+    queryset = Ingredient.objects.all()
     serializer_class = IngredienSerializer
     permission_classes = (IsAuthenticatedOrReadOnly,)
     filter_backends = (IngredientFilter,)
