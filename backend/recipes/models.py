@@ -30,10 +30,8 @@ class Tag(models.Model):
         'Тег', max_length=200, unique=True
     )
     color = models.CharField(
-        max_length=7, unique=True
+        'Цвет', max_length=7, unique=True
     )
-    # color = ColorField(
-    # verbose_name='HEX-код', format='hex',
 
     slug = models.SlugField(
         'Слаг', max_length=200, unique=True
@@ -54,7 +52,7 @@ class Recipe(models.Model):
         auto_now_add=True
     )
     tags = models.ManyToManyField(
-        Tag, related_name='recipes', verbose_name='Теги'
+        Tag, verbose_name='Теги'
     )
     author = models.ForeignKey(
         CustomUser, on_delete=models.CASCADE, verbose_name='Автор рецета',

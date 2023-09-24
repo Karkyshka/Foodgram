@@ -102,8 +102,8 @@ class RecipeViewSet(ModelViewSet):
 
 class TagViewSet(ReadOnlyModelViewSet):
     """Информация о тегах"""
-    # queryset = Tag.objects.prefetch_related('author').all()
-    queryset = Tag.objects.all()
+    queryset = Tag.objects.prefetch_related('author').all()
+    # queryset = Tag.objects.all()
     serializer_class = TagSerializer
     permission_classes = (IsAuthenticatedOrReadOnly, )
     pagination_class = None
@@ -111,8 +111,8 @@ class TagViewSet(ReadOnlyModelViewSet):
 
 class IngredientViewSet(ReadOnlyModelViewSet):
     """Информация об ингредиентах."""
-    # queryset = Ingredient.objects.prefetch_related('author').all()
-    queryset = Ingredient.objects.all()
+    queryset = Ingredient.objects.prefetch_related('author').all()
+    # queryset = Ingredient.objects.all()
     serializer_class = IngredienSerializer
     permission_classes = (IsAuthenticatedOrReadOnly,)
     filter_backends = (IngredientFilter,)
