@@ -1,8 +1,9 @@
 from django.forms import ValidationError
 from django.shortcuts import get_object_or_404
 from djoser.serializers import UserSerializer
-from recipes.models import Recipe
 from rest_framework.serializers import ModelSerializer, SerializerMethodField
+
+from recipes.models import Recipe
 
 from .models import CustomUser, Subscriber
 
