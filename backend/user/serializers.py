@@ -65,6 +65,6 @@ class SubscriberSerializers(UserSerializer):
         recipes = obj.recipes.all()
         if recipes_limit:
             recipes = obj.recipes.all()[:int(recipes_limit)]
-        return serializers.RecipeSerializers(
+        return serializers.RecipeSerializer(
             recipes, many=True, context={'request': request}
         ).data
