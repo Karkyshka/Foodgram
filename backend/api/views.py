@@ -43,7 +43,7 @@ class RecipeViewSet(ModelViewSet):
         """Скачать файл со списком покупок."""
         shopping_cart = 'Список покупок:'
         ingredients = IngredientRecipe.objects.filter(
-            recipe__shoppingcart__user=request.user).values(
+            recipe__shoppingcarts__user=request.user).values(
                 'ingredient__name', 'ingredient__measurement_unit'
         ).annotate(ingredient_amount=Sum('amount'))
         for ingredient in ingredients:
