@@ -59,7 +59,8 @@ ______________
 ## Примеры апи запросов и ответов:
 **POST | Создание рецепта: http://127.0.0.1:8000/api/recipes/**
 
-```{
+```
+{
   "ingredients": [
     {
       "id": 1123,
@@ -74,10 +75,12 @@ ______________
   "name": "string",
   "text": "string",
   "cooking_time": 1
-}``` 
+}
+```
 
 **Ответ:**
-```{
+```
+{
   "id": 0,
   "tags": [
     {
@@ -109,11 +112,12 @@ ______________
   "image": "http://foodgram.example.org/media/recipes/images/image.jpeg",
   "text": "string",
   "cooking_time": 1
-}```
+}
+```
 
 **GET | Ингедиенты. Список http://localhost:8000/api/ingredients/**
 
-
+```
 [
     {
         "id": 2358,
@@ -141,6 +145,7 @@ ______________
         "measurement_unit": "г"
     }
 ]
+```
 ______________
 ## Доступ к сайту:
 Сайт доступен по адресу https://karkyshka.ddns.net
