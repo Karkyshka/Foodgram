@@ -109,8 +109,39 @@ ______________
   "image": "http://foodgram.example.org/media/recipes/images/image.jpeg",
   "text": "string",
   "cooking_time": 1
-} ```
+}
 
+
+**GET | Ингедиенты. Список http://localhost:8000/api/ingredients/**
+
+
+``` [
+    {
+        "id": 2358,
+        "name": "Буррата",
+        "measurement_unit": "г"
+    },
+    {
+        "id": 3383,
+        "name": "Панифарин",
+        "measurement_unit": "г"
+    },
+    {
+        "id": 2189,
+        "name": "абрикосовое варенье",
+        "measurement_unit": "г"
+    },
+    {
+        "id": 2190,
+        "name": "абрикосовое пюре",
+        "measurement_unit": "г"
+    },
+    {
+        "id": 2191,
+        "name": "абрикосовый джем",
+        "measurement_unit": "г"
+    }
+]
 ______________
 ## Доступ к сайту:
 Сайт доступен по адресу https://karkyshka.ddns.net
