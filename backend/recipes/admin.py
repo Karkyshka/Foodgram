@@ -1,5 +1,6 @@
 from django.contrib import admin
 from import_export.admin import ImportExportModelAdmin
+from django.utils.safestring import mark_safe
 
 from .models import (Favorite, Ingredient, IngredientRecipe, Recipe,
                      ShoppingCart, Tag)
@@ -13,13 +14,18 @@ class IngredientInline(admin.TabularInline):
 
 @admin.register(Recipe)
 class RecipeAdmin(ImportExportModelAdmin):
-    list_display = ('pk', 'name', 'author')
+    list_display = ('pk', 'name', 'author', 'get_image')
     list_filter = ('name', 'author', 'tags')
     inlines = (IngredientInline,)
 
     def get_favorites(self, obj):
         return obj.favorite.count()
     get_favorites.short_description = 'Избранное'
+
+    def get_image(self, obj):
+        return mark_safe(f'<img src={obj.image.url} width="80" hieght="30"')
+
+    get_image.short_description = "Изображение"
 
 
 @admin.register(Tag)
