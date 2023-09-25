@@ -74,73 +74,9 @@ ______________
   "name": "string",
   "text": "string",
   "cooking_time": 1
-}``` 
-
-**Ответ:**
-```{
-  "id": 0,
-  "tags": [
-    {
-      "id": 0,
-      "name": "Завтрак",
-      "color": "#E26C2D",
-      "slug": "breakfast"
-    }
-  ],
-  "author": {
-    "email": "user@example.com",
-    "id": 0,
-    "username": "string",
-    "first_name": "Вася",
-    "last_name": "Пупкин",
-    "is_subscribed": false
-  },
-  "ingredients": [
-    {
-      "id": 0,
-      "name": "Картофель отварной",
-      "measurement_unit": "г",
-      "amount": 1
-    }
-  ],
-  "is_favorited": true,
-  "is_in_shopping_cart": true,
-  "name": "string",
-  "image": "http://foodgram.example.org/media/recipes/images/image.jpeg",
-  "text": "string",
-  "cooking_time": 1
 }```
 
-**GET | Ингедиенты. Список http://localhost:8000/api/ingredients/**
 
-
-[
-    {
-        "id": 2358,
-        "name": "Буррата",
-        "measurement_unit": "г"
-    },
-    {
-        "id": 3383,
-        "name": "Панифарин",
-        "measurement_unit": "г"
-    },
-    {
-        "id": 2189,
-        "name": "абрикосовое варенье",
-        "measurement_unit": "г"
-    },
-    {
-        "id": 2190,
-        "name": "абрикосовое пюре",
-        "measurement_unit": "г"
-    },
-    {
-        "id": 2191,
-        "name": "абрикосовый джем",
-        "measurement_unit": "г"
-    }
-]
 ______________
 ## Доступ к сайту:
 Сайт доступен по адресу https://karkyshka.ddns.net
