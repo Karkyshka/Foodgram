@@ -74,7 +74,7 @@ ______________
   "name": "string",
   "text": "string",
   "cooking_time": 1
-}```
+}
 
 
 ______________
