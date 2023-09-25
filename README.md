@@ -16,15 +16,8 @@ ______________
 - Nginx
 - Docker
 - Postgres
-<<<<<<< HEAD
 
-=======
-<<<<<<< HEAD
- Postgres
-=======
->>>>>>> b88d165f0cfbc5b45139d20e7d24da7157549c35
 ______________
->>>>>>> 6d4adf38303cf7319e8cbf225063d8458a058738
 ## Для запуска проекта:
 - Клонируйте репозиторий:
 
@@ -45,7 +38,7 @@ python manage.py migrate
 
 python manage.py runserver
 
-
+______________
 ### Собираем контейнеры:
 - Разверните контейнеры при помощи docker-compose:
 docker-compose up -d --build
@@ -64,9 +57,88 @@ docker-compose down
 
 ______________
 ## Примеры апи запросов и ответов:
+**POST | Создание рецепта: http://127.0.0.1:8000/api/recipes/**
 
+```{
+  "ingredients": [
+    {
+      "id": 1123,
+      "amount": 10
+    }
+  ],
+  "tags": [
+    1,
+    2
+  ],
+  "image": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAgMAAABieywaAAAACVBMVEUAAAD///9fX1/S0ecCAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAACklEQVQImWNoAAAAggCByxOyYQAAAABJRU5ErkJggg==",
+  "name": "string",
+  "text": "string",
+  "cooking_time": 1
+}``` 
 
+**Ответ:**
+```{
+  "id": 0,
+  "tags": [
+    {
+      "id": 0,
+      "name": "Завтрак",
+      "color": "#E26C2D",
+      "slug": "breakfast"
+    }
+  ],
+  "author": {
+    "email": "user@example.com",
+    "id": 0,
+    "username": "string",
+    "first_name": "Вася",
+    "last_name": "Пупкин",
+    "is_subscribed": false
+  },
+  "ingredients": [
+    {
+      "id": 0,
+      "name": "Картофель отварной",
+      "measurement_unit": "г",
+      "amount": 1
+    }
+  ],
+  "is_favorited": true,
+  "is_in_shopping_cart": true,
+  "name": "string",
+  "image": "http://foodgram.example.org/media/recipes/images/image.jpeg",
+  "text": "string",
+  "cooking_time": 1
+} ```
 
+**GET Ингедиенты. Список http://localhost:8000/api/ingredients/**
+``` [
+    {
+        "id": 2358,
+        "name": "Буррата",
+        "measurement_unit": "г"
+    },
+    {
+        "id": 3383,
+        "name": "Панифарин",
+        "measurement_unit": "г"
+    },
+    {
+        "id": 2189,
+        "name": "абрикосовое варенье",
+        "measurement_unit": "г"
+    },
+    {
+        "id": 2190,
+        "name": "абрикосовое пюре",
+        "measurement_unit": "г"
+    },
+    {
+        "id": 2191,
+        "name": "абрикосовый джем",
+        "measurement_unit": "г"
+    }
+]```
 ______________
 ## Доступ к сайту:
 Сайт доступен по адресу https://karkyshka.ddns.net
