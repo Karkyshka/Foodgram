@@ -109,9 +109,12 @@ ______________
   "image": "http://foodgram.example.org/media/recipes/images/image.jpeg",
   "text": "string",
   "cooking_time": 1
-} ```
+}
 
-**GET Ингедиенты. Список http://localhost:8000/api/ingredients/**
+
+**GET | Ингедиенты. Список http://localhost:8000/api/ingredients/**
+
+
 ``` [
     {
         "id": 2358,
