@@ -8,6 +8,7 @@ cryptography==41.0.3
 defusedxml==0.7.1
 diff-match-patch==20230430
 Django==3.2
+django-colorfield==0.10.1
 django-extra-fields==3.0.2
 django-filter==23.2
 django-import-export==3.2.0
