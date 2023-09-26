@@ -27,6 +27,9 @@ class RecipeViewSet(ModelViewSet):
     Добавлние в избранное/корзину.
     отправка файла."""
     queryset = Recipe.objects.select_related('author').all()
+    # Еще остались поля которые стоит оптимизировать.
+    # Есть такая библиотека с помощью которой можно наглядно 
+    # увидеть где идут дубли запросов.
     serializer_class = RecipeActionializer
     # permission_classes = [IsAuthenticatedOrReadOnly]
     permission_classes = [IsOwnerOrReadOnly]

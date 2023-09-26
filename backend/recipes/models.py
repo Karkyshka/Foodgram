@@ -32,9 +32,6 @@ class Tag(models.Model):
         verbose_name='HEX-код',
         max_length=7, unique=True
     )
-    # color = models.CharField(
-    #     'Цвет', max_length=7, unique=True
-    # )
     slug = models.SlugField(
         'Слаг', max_length=200, unique=True
     )
@@ -54,14 +51,15 @@ class Recipe(models.Model):
         auto_now_add=True
     )
     tags = models.ManyToManyField(
-        Tag, verbose_name='Теги', related_name="recipes",
+        Tag, verbose_name='Теги', related_name='recipes',
     )
     author = models.ForeignKey(
         CustomUser, on_delete=models.CASCADE, verbose_name='Автор рецета',
         related_name='recipes'
     )
     ingredients = models.ManyToManyField(
-        Ingredient, through='IngredientRecipe',
+        # Всем связным полям лучше задать related_name
+        Ingredient, through='IngredientRecipes', related_name='recipes',
         verbose_name='Ингредиенты'
     )
     name = models.CharField(
@@ -91,11 +89,12 @@ class Recipe(models.Model):
 class IngredientRecipe(models.Model):
     recipe = models.ForeignKey(
         Recipe, on_delete=models.CASCADE,
-        related_name='ingredientrecipe', verbose_name='Рецепт'
+        related_name='ingredientrecipes', verbose_name='Рецепт'
     )
+    # related_name лучше делать во мн. ч.
     ingredient = models.ForeignKey(
         Ingredient, on_delete=models.CASCADE,
-        related_name='ingredientrecipe', verbose_name='Ингредиент'
+        related_name='ingredientrecipes', verbose_name='Ингредиент'
     )
     amount = models.IntegerField(
         verbose_name='Количество ингредиента',
@@ -105,7 +104,7 @@ class IngredientRecipe(models.Model):
     class Meta:
         verbose_name = 'Ингредиент в рецепте'
         verbose_name_plural = 'Ингредиенты в рецепте'
-        default_related_name = 'ingredientrecipe'
+        default_related_name = 'ingredientrecipes'
 
 
 class ShoppingCart(models.Model):

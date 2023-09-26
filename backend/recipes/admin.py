@@ -14,7 +14,8 @@ class IngredientInline(admin.TabularInline):
 
 @admin.register(Recipe)
 class RecipeAdmin(ImportExportModelAdmin):
-    list_display = ('pk', 'name', 'author', 'get_image')
+    list_display = ('pk', 'name', 'author', 'get_image', 'get_favorites')
+    # Количество в избранном стоит добавить в список рецептов.
     list_filter = ('name', 'author', 'tags')
     inlines = (IngredientInline,)
 
