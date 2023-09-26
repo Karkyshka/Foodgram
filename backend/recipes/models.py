@@ -58,9 +58,8 @@ class Recipe(models.Model):
         related_name='recipes'
     )
     ingredients = models.ManyToManyField(
-        # Всем связным полям лучше задать related_name
-        Ingredient, through='IngredientRecipes', related_name='recipes',
-        verbose_name='Ингредиенты'
+        Ingredient, through='IngredientRecipe',
+        verbose_name='Ингредиенты', related_name='recipes'
     )
     name = models.CharField(
         verbose_name='Название блюда', max_length=200
@@ -91,7 +90,6 @@ class IngredientRecipe(models.Model):
         Recipe, on_delete=models.CASCADE,
         related_name='ingredientrecipes', verbose_name='Рецепт'
     )
-    # related_name лучше делать во мн. ч.
     ingredient = models.ForeignKey(
         Ingredient, on_delete=models.CASCADE,
         related_name='ingredientrecipes', verbose_name='Ингредиент'
@@ -104,7 +102,7 @@ class IngredientRecipe(models.Model):
     class Meta:
         verbose_name = 'Ингредиент в рецепте'
         verbose_name_plural = 'Ингредиенты в рецепте'
-        default_related_name = 'ingredientrecipes'
+        default_related_name = 'ingredientrecipe'
 
 
 class ShoppingCart(models.Model):
