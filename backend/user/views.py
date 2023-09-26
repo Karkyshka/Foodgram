@@ -1,3 +1,4 @@
+from api.permission import IsOwnerOrReadOnly
 from django.shortcuts import get_object_or_404
 from djoser.views import UserViewSet
 from rest_framework import status
@@ -9,11 +10,21 @@ from .models import CustomUser, Subscriber
 from .pagination import CustomPagination
 from .serializers import CustomUserSerializers, SubscriberSerializers
 
+# from rest_framework.permissions import AllowAny
+
 
 class CustomUserViewSet(UserViewSet):
     queryset = CustomUser.objects.all()
     serializer_class = CustomUserSerializers
     pagination_class = CustomPagination
+    permission_classes = (IsOwnerOrReadOnly,)
+
+    # def get_permissions(self):
+    #     if self.action in ('list', 'retrieve'):
+    #         self.permission_classes = (AllowAny,)
+    #     elif self.action == 'partial_update':
+    #         self.permission_classes = (IsOwnerOrReadOnly,)
+    #     return super().get_permissions()
 
     @action(detail=False, permission_classes=[IsAuthenticated])
     def subscriptions(self, request):

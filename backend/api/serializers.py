@@ -85,7 +85,6 @@ class IngredientRecipeListSerializer(ModelSerializer):
     measurement_unit = serializers.ReadOnlyField(
         source='ingredient.measurement_unit'
     )
-    # measurement_unit = serializers.CharField(read_only=True)
 
     class Meta:
         model = IngredientRecipe
@@ -113,11 +112,15 @@ class RecipeListSerializer(ModelSerializer):
     def get_is_in_shopping_cart(self, obj):
         """Список покупок"""
         request = self.context.get('request')
+        if request is None or request.user.is_anonymous:
+            return False
         return obj.shoppingcarts.filter(user=request.user).exists()
 
     def get_is_favorited(self, obj):
         """Избранное"""
         request = self.context.get('request')
+        if request is None or request.user.is_anonymous:
+            return False
         return obj.favorite.filter(user=request.user).exists()
 
 

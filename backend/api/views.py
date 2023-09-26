@@ -37,6 +37,13 @@ class RecipeViewSet(ModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filterset_class = RecipeFilter
 
+    # def get_permissions(self):
+    #     if self.action in ('list', 'retrieve'):
+    #         self.permission_classes = (AllowAny,)
+    #     elif self.action == 'partial_update':
+    #         self.permission_classes = (IsOwnerOrReadOnly,)
+    #     return super().get_permissions()
+
     def get_serializer_class(self):
         if self.action in ('list', 'retrieve'):
             return RecipeListSerializer
