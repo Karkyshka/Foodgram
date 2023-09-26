@@ -1,23 +1,24 @@
+from api.serializers import (FavoriteSerializer, IngredienSerializer,
+                             RecipeActionializer, RecipeListSerializer,
+                             ShoppingCartSerializer, TagSerializer)
 from django.db.models import Sum
 from django.http.response import HttpResponse
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
+from recipes.models import (Favorite, Ingredient, IngredientRecipe, Recipe,
+                            ShoppingCart, Tag)
 from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.permissions import (IsAuthenticated,
                                         IsAuthenticatedOrReadOnly)
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
-
-from api.serializers import (FavoriteSerializer, IngredienSerializer,
-                             RecipeActionializer, RecipeListSerializer,
-                             ShoppingCartSerializer, TagSerializer)
-from recipes.models import (Favorite, Ingredient, IngredientRecipe, Recipe,
-                            ShoppingCart, Tag)
 from user.pagination import CustomPagination
 
 from .filter import IngredientFilter, RecipeFilter
 from .permission import IsOwnerOrReadOnly
+
+# from rest_framework.permissions import SAFE_METHODS
 
 
 class RecipeViewSet(ModelViewSet):
@@ -31,9 +32,7 @@ class RecipeViewSet(ModelViewSet):
     # Есть такая библиотека с помощью которой можно наглядно
     # увидеть где идут дубли запросов.
     serializer_class = RecipeActionializer
-    # permission_classes = [IsAuthenticatedOrReadOnly]
-    permission_classes = [IsOwnerOrReadOnly]
-    # permission_classes = [AllowAny]
+    permission_classes = (IsOwnerOrReadOnly,)
     pagination_class = CustomPagination
     filter_backends = [DjangoFilterBackend]
     filterset_class = RecipeFilter

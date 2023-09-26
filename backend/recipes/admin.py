@@ -1,6 +1,6 @@
 from django.contrib import admin
-from import_export.admin import ImportExportModelAdmin
 from django.utils.safestring import mark_safe
+from import_export.admin import ImportExportModelAdmin
 
 from .models import (Favorite, Ingredient, IngredientRecipe, Recipe,
                      ShoppingCart, Tag)

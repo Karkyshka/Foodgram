@@ -1,10 +1,11 @@
+from api import serializers
 from django.forms import ValidationError
 from django.shortcuts import get_object_or_404
 from djoser.serializers import UserSerializer
+from rest_framework import serializers
 from rest_framework.serializers import SerializerMethodField
 
 from .models import CustomUser, Subscriber
-from api import serializers
 
 
 class CustomUserSerializers(UserSerializer):
