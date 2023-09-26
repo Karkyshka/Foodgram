@@ -28,6 +28,7 @@ class RecipeViewSet(ModelViewSet):
     отправка файла."""
     queryset = Recipe.objects.select_related('author').all()
     serializer_class = RecipeActionializer
+    # permission_classes = [IsAuthenticatedOrReadOnly]
     permission_classes = [IsOwnerOrReadOnly]
     # permission_classes = [AllowAny]
     pagination_class = CustomPagination
