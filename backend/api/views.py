@@ -4,7 +4,7 @@ from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status
 from rest_framework.decorators import action
-from rest_framework.permissions import (AllowAny, IsAuthenticated,
+from rest_framework.permissions import (IsAuthenticated,
                                         IsAuthenticatedOrReadOnly)
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
@@ -17,6 +17,7 @@ from recipes.models import (Favorite, Ingredient, IngredientRecipe, Recipe,
 from user.pagination import CustomPagination
 
 from .filter import IngredientFilter, RecipeFilter
+from .permission import IsOwnerOrReadOnly
 
 
 class RecipeViewSet(ModelViewSet):
@@ -27,7 +28,8 @@ class RecipeViewSet(ModelViewSet):
     отправка файла."""
     queryset = Recipe.objects.select_related('author').all()
     serializer_class = RecipeActionializer
-    permission_classes = [AllowAny]
+    permission_classes = [IsOwnerOrReadOnly]
+    # permission_classes = [AllowAny]
     pagination_class = CustomPagination
     filter_backends = [DjangoFilterBackend]
     filterset_class = RecipeFilter
