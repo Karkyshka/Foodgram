@@ -1,24 +1,25 @@
-from api.serializers import (FavoriteSerializer, IngredienSerializer,
-                             RecipeActionializer, RecipeListSerializer,
-                             ShoppingCartSerializer, TagSerializer)
 from django.db.models import Sum
 from django.http.response import HttpResponse
 from django.shortcuts import get_object_or_404
+# from django.utils.decorators import method_decorator
 from django_filters.rest_framework import DjangoFilterBackend
-from recipes.models import (Favorite, Ingredient, IngredientRecipe, Recipe,
-                            ShoppingCart, Tag)
+# from query_counter.decorators import queries_counter
 from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.permissions import (IsAuthenticated,
                                         IsAuthenticatedOrReadOnly)
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
+
+from api.serializers import (FavoriteSerializer, IngredienSerializer,
+                             RecipeActionializer, RecipeListSerializer,
+                             ShoppingCartSerializer, TagSerializer)
+from recipes.models import (Favorite, Ingredient, IngredientRecipe, Recipe,
+                            ShoppingCart, Tag)
 from user.pagination import CustomPagination
 
 from .filter import IngredientFilter, RecipeFilter
 from .permission import IsOwnerOrReadOnly
-
-# from rest_framework.permissions import SAFE_METHODS
 
 
 class RecipeViewSet(ModelViewSet):
@@ -28,9 +29,6 @@ class RecipeViewSet(ModelViewSet):
     Добавлние в избранное/корзину.
     отправка файла."""
     queryset = Recipe.objects.select_related('author').all()
-    # Еще остались поля которые стоит оптимизировать.
-    # Есть такая библиотека с помощью которой можно наглядно
-    # увидеть где идут дубли запросов.
     serializer_class = RecipeActionializer
     permission_classes = (IsOwnerOrReadOnly,)
     pagination_class = CustomPagination
@@ -69,7 +67,8 @@ class RecipeViewSet(ModelViewSet):
             f'attachment; filename="{file}.txt"'
         return response
 
-    @action(methods=['post', 'delete'], detail=True)
+    @action(methods=['post', 'delete'], detail=True,
+            permission_classes=[IsAuthenticated])
     def shopping_cart(self, request, pk):
         """Добавление, удаление в список покупок."""
         if request.method == 'POST':
@@ -90,7 +89,8 @@ class RecipeViewSet(ModelViewSet):
                 ShoppingCart, user=request.user, recipe=recipe).delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
 
-    @action(methods=['post', 'delete'], detail=True)
+    @action(methods=['post', 'delete'], detail=True,
+            permission_classes=[IsAuthenticated])
     def favorite(self, request, pk):
         """Добавление, удаление в избранное."""
         if request.method == 'POST':

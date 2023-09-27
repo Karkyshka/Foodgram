@@ -1,10 +1,11 @@
-from api.permission import IsOwnerOrReadOnly
 from django.shortcuts import get_object_or_404
 from djoser.views import UserViewSet
 from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+
+from api.permission import IsOwnerOrReadOnly
 
 from .models import CustomUser, Subscriber
 from .pagination import CustomPagination
@@ -14,23 +15,26 @@ from .serializers import CustomUserSerializers, SubscriberSerializers
 
 
 class CustomUserViewSet(UserViewSet):
-    queryset = CustomUser.objects.all()
+    queryset = CustomUser.objects.select_related('author_id').all()
     serializer_class = CustomUserSerializers
     pagination_class = CustomPagination
     permission_classes = (IsOwnerOrReadOnly,)
 
     # def get_permissions(self):
     #     if self.action in ('list', 'retrieve'):
-    #         self.permission_classes = (AllowAny,)
+    #         self.permission_classe = (AllowAny,)
     #     elif self.action == 'partial_update':
     #         self.permission_classes = (IsOwnerOrReadOnly,)
     #     return super().get_permissions()
+    # print('..............2.............')
 
     @action(detail=False, permission_classes=[IsAuthenticated])
     def subscriptions(self, request):
         """Просмотр ленты подписок."""
         user = request.user
-        queryset = CustomUser.objects.filter(following__follower=user)
+        # queryset = CustomUser.objects.filter(following__follower=user)
+        queryset = CustomUser.objects.select_related(
+            'auth_token').filter(following__follower=user)
         page = self.paginate_queryset(queryset)
         serializes = SubscriberSerializers(
             page, many=True, context={'request': request}
@@ -43,6 +47,7 @@ class CustomUserViewSet(UserViewSet):
         """Обновление статуса подписчика."""
         follower = request.user
         following = get_object_or_404(CustomUser, pk=id)
+
         if request.method == 'POST':
             serialaizer = SubscriberSerializers(
                 following, data=request.data, context={'request': request}
