@@ -15,7 +15,7 @@ from .serializers import CustomUserSerializers, SubscriberSerializers
 
 
 class CustomUserViewSet(UserViewSet):
-    queryset = CustomUser.objects.select_related('author_id').all()
+    queryset = CustomUser.objects.select_related('auth_token').all()
     serializer_class = CustomUserSerializers
     pagination_class = CustomPagination
     permission_classes = (IsOwnerOrReadOnly,)
