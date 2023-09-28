@@ -1,8 +1,9 @@
-from api import serializers
 from django.forms import ValidationError
 from django.shortcuts import get_object_or_404
 from djoser.serializers import UserSerializer
 from rest_framework.serializers import SerializerMethodField
+
+from api import serializers
 
 from .models import CustomUser, Subscriber
 

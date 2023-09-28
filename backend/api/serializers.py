@@ -1,9 +1,10 @@
 from djoser.serializers import UserSerializer
 from drf_extra_fields.fields import Base64ImageField
-from recipes.models import (Favorite, Ingredient, IngredientRecipe, Recipe,
-                            ShoppingCart, Tag)
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
+
+from recipes.models import (Favorite, Ingredient, IngredientRecipe, Recipe,
+                            ShoppingCart, Tag)
 from user.models import CustomUser
 from user.serializers import CustomUserSerializers
 
@@ -169,7 +170,7 @@ class RecipeActionializer(serializers.ModelSerializer):
         return recipe
 
     def update(self, instance, validated_data):
-        """Изменение записей в связных таблицах"""    
+        """Изменение записей в связных таблицах"""
         instance.tags.clear()
         instance.tags.set(validated_data.pop('tags'))
         ingredients = validated_data.pop('ingredients')
@@ -177,7 +178,6 @@ class RecipeActionializer(serializers.ModelSerializer):
             IngredientRecipe.objects.filter(recipe=instance).delete()
             self.create_ingredient(ingredients, instance)
         return super().update(instance, validated_data)
-        
 
     def to_representation(self, instance):
         return RecipeListSerializer(instance, context={

@@ -1,10 +1,11 @@
-from api.permission import IsOwnerOrReadOnly
 from django.shortcuts import get_object_or_404
 from djoser.views import UserViewSet
 from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+
+from api.permission import IsOwnerOrReadOnly
 
 from .models import CustomUser, Subscriber
 from .pagination import CustomPagination
