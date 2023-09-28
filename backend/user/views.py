@@ -32,6 +32,7 @@ class CustomUserViewSet(UserViewSet):
 
     @action(methods=['POST', 'DELETE'],
             detail=True, permission_classes=[IsAuthenticated])
+    # функционал подписки на автора не трогала. он был
     def subscribe(self, request, id):
         """Обновление статуса подписчика."""
         follower = request.user

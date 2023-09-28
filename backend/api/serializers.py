@@ -137,7 +137,7 @@ class IngredientRecipeSerializer(ModelSerializer):
 
 class RecipeActionializer(serializers.ModelSerializer):
     """Работа с рецептами. Создание, редакторование"""
-    ingredients = IngredientRecipeSerializer(many=True, partial=True)
+    ingredients = IngredientRecipeSerializer(many=True)
     tags = serializers.PrimaryKeyRelatedField(
         queryset=Tag.objects.all(), many=True
     )
@@ -171,12 +171,14 @@ class RecipeActionializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         """Изменение записей в связных таблицах"""
+        # изменение рецепта не работает именно с postgresql.
+        # по апи работает, т.к. работа идет с sqlite3.
+        # спросила у наставников, что делать
         instance.tags.clear()
+        IngredientRecipe.objects.filter(recipe=instance).delete()
         instance.tags.set(validated_data.pop('tags'))
         ingredients = validated_data.pop('ingredients')
-        if ingredients:
-            IngredientRecipe.objects.filter(recipe=instance).delete()
-            self.create_ingredient(ingredients, instance)
+        self.create_ingredient(ingredients, instance)
         return super().update(instance, validated_data)
 
     def to_representation(self, instance):
