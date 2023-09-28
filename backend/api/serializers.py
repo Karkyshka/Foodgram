@@ -168,17 +168,31 @@ class RecipeActionializer(serializers.ModelSerializer):
         self.create_ingredient(ingredients, recipe)
         return recipe
 
-    def update(self, instance, validated_data):
-        # через ip рецепт редактируется, а через сайт работает
-        # только если обновить ингредиенты.
+    def update(self, recipe, validated_data):
         """Изменение записей в связных таблицах"""
-        instance.tags.clear()
-        instance.tags.set(validated_data.pop('tags'))
+        tags = validated_data.pop('tags')
         ingredients = validated_data.pop('ingredients')
+        for key, value in validated_data.items():
+            if hasattr(recipe, key):
+                setattr(recipe, key, value)
+        if tags:
+            recipe.tags.clear()
+            recipe.tags.set(tags)
+
         if ingredients:
-            IngredientRecipe.objects.filter(recipe=instance).delete()
-            self.create_ingredient(ingredients, instance)
-        return super().update(instance, validated_data)
+            recipe.ingredients.clear()
+            self.ingredients_set(recipe, ingredients)
+
+        recipe.save()
+        return recipe
+    
+        # instance.tags.clear()
+        # instance.tags.set(validated_data.pop('tags'))
+        # ingredients = validated_data.pop('ingredients')
+        # if ingredients:
+        #     IngredientRecipe.objects.filter(recipe=instance).delete()
+        #     self.create_ingredient(ingredients, instance)
+        # return super().update(instance, validated_data)
 
     def to_representation(self, instance):
         return RecipeListSerializer(instance, context={
