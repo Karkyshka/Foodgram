@@ -169,6 +169,9 @@ class RecipeActionializer(serializers.ModelSerializer):
         return recipe
 
     def update(self, instance, validated_data):
+        # через ip рецепт редактируется, а через сайт работает
+        # только если обновить ингредиенты. В интсрументах разработчка
+        # никаких запросов не отправляется, кнопка "редактировать" недоступна
         """Изменение записей в связных таблицах"""
         instance.tags.clear()
         IngredientRecipe.objects.filter(recipe=instance).delete()
