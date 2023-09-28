@@ -136,7 +136,7 @@ class IngredientRecipeSerializer(ModelSerializer):
 
 class RecipeActionializer(serializers.ModelSerializer):
     """Работа с рецептами. Создание, редакторование"""
-    ingredients = IngredientRecipeSerializer(many=True)
+    ingredients = IngredientRecipeSerializer(many=True, partial=True)
     tags = serializers.PrimaryKeyRelatedField(
         queryset=Tag.objects.all(), many=True
     )
@@ -177,6 +177,7 @@ class RecipeActionializer(serializers.ModelSerializer):
             IngredientRecipe.objects.filter(recipe=instance).delete()
             self.create_ingredient(ingredients, instance)
         return super().update(instance, validated_data)
+        
 
     def to_representation(self, instance):
         return RecipeListSerializer(instance, context={
