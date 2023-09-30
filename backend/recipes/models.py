@@ -8,7 +8,7 @@ from user.models import CustomUser
 class Ingredient(models.Model):
     """Список ингредиентов. Поиска по имени."""
     name = models.CharField(
-        'Ингредиент', max_length=200
+        'Ингредиент', max_length=200, unique=True
     )
     measurement_unit = models.CharField(
         'Единицы измерения', max_length=200
@@ -103,6 +103,9 @@ class IngredientRecipe(models.Model):
         verbose_name = 'Ингредиент в рецепте'
         verbose_name_plural = 'Ингредиенты в рецепте'
         default_related_name = 'ingredientrecipe'
+
+    def __str__(self):
+        return f'{self.ingredient} {self.recipe}'
 
 
 class ShoppingCart(models.Model):

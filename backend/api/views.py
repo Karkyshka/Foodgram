@@ -26,7 +26,7 @@ class RecipeViewSet(ModelViewSet):
     Создание и редактирование объекта.
     Добавлние в избранное/корзину.
     отправка файла."""
-    queryset = Recipe.objects.select_related('author').all()
+    queryset = Recipe.objects.prefetch_related('author').all()
     serializer_class = RecipeActionializer
     permission_classes = (IsOwnerOrReadOnly,)
     pagination_class = CustomPagination
@@ -37,6 +37,9 @@ class RecipeViewSet(ModelViewSet):
         if self.action in ('list', 'retrieve'):
             return RecipeListSerializer
         return RecipeActionializer
+
+    def perform_create(self, serializer):
+        serializer.save(author=self.request.user)
 
     @action(methods=['GET'], detail=False,
             permission_classes=[IsAuthenticated])

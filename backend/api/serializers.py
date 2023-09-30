@@ -1,3 +1,5 @@
+from django.db import transaction
+from django.shortcuts import get_object_or_404
 from djoser.serializers import UserSerializer
 from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
@@ -80,11 +82,13 @@ class ShoppingCartSerializer(ModelSerializer):
 class IngredientRecipeListSerializer(ModelSerializer):
     """Ингредиенты в рецептах"""
     id = serializers.PrimaryKeyRelatedField(
-        queryset=Ingredient.objects.all()
+        queryset=Ingredient.objects.all(), source='ingredient.id'
     )
-    name = serializers.ReadOnlyField(source='ingredient.name')
-    measurement_unit = serializers.ReadOnlyField(
-        source='ingredient.measurement_unit'
+    name = serializers.CharField(
+        source='ingredient.name', read_only=True
+    )
+    measurement_unit = serializers.CharField(
+        source='ingredient.measurement_unit', read_only=True
     )
 
     class Meta:
@@ -135,15 +139,27 @@ class IngredientRecipeSerializer(ModelSerializer):
         fields = ('id', 'amount',)
 
 
+class IngredientsInResipeSerializer(ModelSerializer):
+    id = serializers.PrimaryKeyRelatedField(
+        source='ingredient',
+        queryset=Ingredient.objects.all()
+    )
+    recipe = serializers.PrimaryKeyRelatedField(read_only=True)
+    amount = serializers.IntegerField(write_only=True)
+
+    class Meta:
+        model = IngredientRecipe
+        fields = ('recipe', 'id', 'amount')
+
+
 class RecipeActionializer(serializers.ModelSerializer):
     """Работа с рецептами. Создание, редакторование"""
-    ingredients = IngredientRecipeSerializer(many=True)
+    ingredients = IngredientsInResipeSerializer(many=True)
     tags = serializers.PrimaryKeyRelatedField(
         queryset=Tag.objects.all(), many=True
     )
     image = Base64ImageField()
     author = UserSerializer(read_only=True)
-    cooking_time = serializers.IntegerField()
 
     class Meta:
         model = Recipe
@@ -152,33 +168,64 @@ class RecipeActionializer(serializers.ModelSerializer):
             'cooking_time', 'name'
         )
 
-    def create_ingredient(self, ingredients, recipe):
-        for ingredient in ingredients:
-            IngredientRecipe.objects.create(
-                recipe=recipe,
-                ingredient_id=ingredient.get('id'),
-                amount=ingredient.get('amount'), )
+    def validate_ingridients(self, data):
+        ingredients = self.initial_data.get('ingredients')
+        if not ingredients:
+            raise serializers.ValidationError({
+                'ingredients': 'Нужен хоть один ингридиент для рецепта'})
+        ingredient_list = []
+        for ingredient_item in ingredients:
+            ingredient = get_object_or_404(
+                Ingredient, id=ingredient_item['id']
+            )
+            if ingredient in ingredient_list:
+                raise serializers.ValidationError(
+                    'Ингредиенты должны быть уникальными'
+                )
+            ingredient_list.append(ingredient)
+            if int(ingredient_item['amount']) < 1:
+                raise serializers.ValidationError({
+                    'ingredients': ('Убедитесь, что значение количества '
+                                    'ингредиента больше 1')
+                })
+        return data
 
+    @transaction.atomic
     def create(self, validated_data):
         """Добавление записей в связных таблицах"""
-        request = self.context.get('request')
         ingredients = validated_data.pop('ingredients')
         tags = validated_data.pop('tags')
-        recipe = Recipe.objects.create(author=request.user, **validated_data)
+        recipe = Recipe.objects.create(**validated_data)
         recipe.tags.set(tags)
-        self.create_ingredient(ingredients, recipe)
+        create_ingredients = [
+            IngredientRecipe(
+                ingredient=ingredient['ingredient'],
+                recipe=recipe,
+                amount=ingredient['amount']
+            )
+            for ingredient in ingredients
+        ]
+        IngredientRecipe.objects.bulk_create(create_ingredients)
         return recipe
 
+    @transaction.atomic
     def update(self, instance, validated_data):
         """Изменение записей в связных таблицах"""
-        # изменение рецепта не работает именно с postgresql.
-        # по апи работает, т.к. работа идет с sqlite3.
-        # спросила у наставников, что делать
-        instance.tags.clear()
-        IngredientRecipe.objects.filter(recipe=instance).delete()
-        instance.tags.set(validated_data.pop('tags'))
+        tags = validated_data.pop('tags')
         ingredients = validated_data.pop('ingredients')
-        self.create_ingredient(ingredients, instance)
+        if tags is not None:
+            instance.tags.set(tags)
+        if ingredients is not None:
+            instance.ingredients.clear()
+        create_ingredients = [
+            IngredientRecipe(
+                ingredient=ingredient['ingredient'],
+                recipe=instance,
+                amount=ingredient['amount']
+            )
+            for ingredient in ingredients
+        ]
+        IngredientRecipe.objects.bulk_create(create_ingredients)
         return super().update(instance, validated_data)
 
     def to_representation(self, instance):
