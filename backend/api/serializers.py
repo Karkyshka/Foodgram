@@ -1,5 +1,4 @@
 from django.db import transaction
-from django.db.models import Sum
 from django.shortcuts import get_object_or_404
 from djoser.serializers import UserSerializer
 from drf_extra_fields.fields import Base64ImageField
@@ -9,7 +8,6 @@ from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 from user.models import CustomUser
 from user.serializers import CustomUserSerializers
-from rest_framework.serializers import ValidationError
 
 
 class RecipeSerializer(serializers.ModelSerializer):
@@ -172,20 +170,20 @@ class RecipeActionializer(serializers.ModelSerializer):
     def validate_ingridients(self, data):
         ingredients = self.initial_data.get('ingredients')
         if not ingredients:
-            raise ValidationError({
+            raise serializers.ValidationError({
                 'ingredients': 'Нужен хоть один ингридиент для рецепта'})
         ingredient_list = []
         for ingredient_item in ingredients:
             ingredient = get_object_or_404(
-                Ingredient, id=ingredient_item['ingredients']
+                Ingredient, id=ingredient_item['ingredient']
             )
             if ingredient in ingredient_list:
-                raise ValidationError(
+                raise serializers.ValidationError(
                     'Ингредиенты должны быть уникальными'
                 )
             ingredient_list.append(ingredient)
             if int(ingredient_item['amount']) < 1:
-                raise ValidationError({
+                raise serializers.ValidationError({
                     'ingredients': ('Убедитесь, что значение количества '
                                     'ингредиента больше 1')
                 })
@@ -222,7 +220,7 @@ class RecipeActionializer(serializers.ModelSerializer):
             IngredientRecipe(
                 ingredient=ingredient['ingredient'],
                 recipe=instance,
-                amount=ingredient[Sum('amount')]
+                amount=ingredient['amount']
             )
             for ingredient in ingredients
         ]
