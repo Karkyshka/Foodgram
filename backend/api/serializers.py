@@ -9,6 +9,7 @@ from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 from user.models import CustomUser
 from user.serializers import CustomUserSerializers
+from rest_framework.serializers import ValidationError
 
 
 class RecipeSerializer(serializers.ModelSerializer):
@@ -171,20 +172,20 @@ class RecipeActionializer(serializers.ModelSerializer):
     def validate_ingridients(self, data):
         ingredients = self.initial_data.get('ingredients')
         if not ingredients:
-            raise serializers.ValidationError({
+            raise ValidationError({
                 'ingredients': 'Нужен хоть один ингридиент для рецепта'})
         ingredient_list = []
         for ingredient_item in ingredients:
             ingredient = get_object_or_404(
-                Ingredient, id=ingredient_item['id']
+                Ingredient, id=ingredient_item['ingredients']
             )
             if ingredient in ingredient_list:
-                raise serializers.ValidationError(
+                raise ValidationError(
                     'Ингредиенты должны быть уникальными'
                 )
             ingredient_list.append(ingredient)
             if int(ingredient_item['amount']) < 1:
-                raise serializers.ValidationError({
+                raise ValidationError({
                     'ingredients': ('Убедитесь, что значение количества '
                                     'ингредиента больше 1')
                 })
