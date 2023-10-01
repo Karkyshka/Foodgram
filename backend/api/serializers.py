@@ -212,9 +212,7 @@ class RecipeActionializer(serializers.ModelSerializer):
             IngredientRecipe(
                 ingredient=ingredient['ingredient'],
                 recipe=recipe,
-                amount=ingredient[Sum('amount')]
-                # amount=['ingredientrecipes_amount'=Sum('amount')]
-                # amount=ingredient['amount']
+                amount=ingredient['amount']
             )
             for ingredient in ingredients
         ]
@@ -234,8 +232,9 @@ class RecipeActionializer(serializers.ModelSerializer):
             IngredientRecipe(
                 ingredient=ingredient['ingredient'],
                 recipe=instance,
+                amount=ingredient[Sum('ingredientrecipes__amount')]
                 # amount=ingredient[F('ingredientrecipes__amount')]
-                amount=ingredient['amount']
+                # amount=ingredient['amount']
             )
             for ingredient in ingredients
         ]
@@ -244,6 +243,6 @@ class RecipeActionializer(serializers.ModelSerializer):
         return super().update(instance, validated_data)
 
     def to_representation(self, instance):
-        return RecipeListSerializer(instance, context={
-            'request': self.context.get('request')
-        }).data
+        return RecipeListSerializer(
+            instance, context={'request': self.context.get('request')}
+        ).data

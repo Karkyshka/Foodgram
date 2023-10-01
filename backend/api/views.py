@@ -2,6 +2,7 @@ from api.serializers import (FavoriteSerializer, IngredienSerializer,
                              RecipeActionializer, RecipeListSerializer,
                              ShoppingCartSerializer, TagSerializer)
 from django.db.models import Sum
+from django.http import HttpResponse
 from django.http.response import HttpResponse
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
@@ -38,7 +39,6 @@ class RecipeViewSet(ModelViewSet):
         return RecipeActionializer
 
     def perform_create(self, serializer):
-        serializer.is_valid()
         serializer.save(author=self.request.user)
 
     @action(methods=['GET'], detail=False,
