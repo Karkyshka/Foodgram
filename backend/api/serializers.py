@@ -167,7 +167,7 @@ class RecipeActionializer(serializers.ModelSerializer):
             'cooking_time', 'name'
         )
 
-    def validate_ingridients(self, data):
+    def validate_ingredients(self, data):
         ingredients = self.initial_data.get('ingredients')
         if not ingredients:
             raise serializers.ValidationError({
@@ -175,7 +175,7 @@ class RecipeActionializer(serializers.ModelSerializer):
         ingredient_list = []
         for ingredient_item in ingredients:
             ingredient = get_object_or_404(
-                Ingredient, id=ingredient_item['ingredient']
+                Ingredient, id=ingredient_item['id']
             )
             if ingredient in ingredient_list:
                 raise serializers.ValidationError(
