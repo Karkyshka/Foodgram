@@ -8,7 +8,7 @@ from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 from user.models import CustomUser
 from user.serializers import CustomUserSerializers
-
+from django.db.models import Sum
 # from django.db.models import F
 
 
@@ -202,7 +202,9 @@ class RecipeActionializer(serializers.ModelSerializer):
             IngredientRecipe(
                 ingredient=ingredient['ingredient'],
                 recipe=recipe,
-                amount=ingredient['amount']
+                amount=ingredient[Sum('amount')]
+                # amount=['ingredientrecipes_amount'=Sum('amount')]
+                # amount=ingredient['amount']
             )
             for ingredient in ingredients
         ]
