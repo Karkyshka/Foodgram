@@ -4,6 +4,8 @@ from djoser.serializers import UserSerializer
 from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
+from django.db.models import F
+
 
 from recipes.models import (Favorite, Ingredient, IngredientRecipe, Recipe,
                             ShoppingCart, Tag)
@@ -221,10 +223,12 @@ class RecipeActionializer(serializers.ModelSerializer):
             IngredientRecipe(
                 ingredient=ingredient['ingredient'],
                 recipe=instance,
-                amount=ingredient['amount']
+                amount=F['ingredientinrecipe__amount']
+                # amount=ingredient['amount']
             )
             for ingredient in ingredients
         ]
+
         IngredientRecipe.objects.bulk_create(create_ingredients)
         return super().update(instance, validated_data)
 
