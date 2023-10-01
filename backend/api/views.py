@@ -26,7 +26,7 @@ class RecipeViewSet(ModelViewSet):
     Добавлние в избранное/корзину.
     отправка файла."""
     queryset = Recipe.objects.prefetch_related('author').all()
-    serializer_class = RecipeActionializer
+    # serializer_class = RecipeActionializer
     permission_classes = (IsOwnerOrReadOnly,)
     pagination_class = CustomPagination
     filter_backends = [DjangoFilterBackend]

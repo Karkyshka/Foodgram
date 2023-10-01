@@ -203,7 +203,7 @@ class RecipeActionializer(serializers.ModelSerializer):
             IngredientRecipe(
                 ingredient=ingredient['ingredient'],
                 recipe=recipe,
-                amount=ingredient[Sum('amount')]
+                amount=ingredient[Sum('ingredientrecipes_amount')]
                 # amount=['ingredientrecipes_amount'=Sum('amount')]
                 # amount=ingredient['amount']
             )
