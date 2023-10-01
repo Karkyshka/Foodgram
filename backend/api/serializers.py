@@ -199,11 +199,20 @@ class RecipeActionializer(serializers.ModelSerializer):
         tags = validated_data.pop('tags')
         recipe = Recipe.objects.create(**validated_data)
         recipe.tags.set(tags)
+        ingredient_list = []
+        for ingredient_item in ingredients:
+            ingredient = get_object_or_404(
+                Ingredient, id=ingredient_item['id']
+            )
+            if ingredient in ingredient_list:
+                raise serializers.ValidationError(
+                    'Ингредиенты должны быть уникальными'
+                )
         create_ingredients = [
             IngredientRecipe(
                 ingredient=ingredient['ingredient'],
                 recipe=recipe,
-                amount=ingredient[Sum('ingredientrecipes_amount')]
+                amount=ingredient[Sum('amount')]
                 # amount=['ingredientrecipes_amount'=Sum('amount')]
                 # amount=ingredient['amount']
             )
