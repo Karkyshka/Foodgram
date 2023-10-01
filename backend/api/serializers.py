@@ -10,8 +10,6 @@ from rest_framework.serializers import ModelSerializer
 from user.models import CustomUser
 from user.serializers import CustomUserSerializers
 
-# from django.db.models import F
-
 
 class RecipeSerializer(serializers.ModelSerializer):
     """Работа с рецептами.
@@ -199,15 +197,6 @@ class RecipeActionializer(serializers.ModelSerializer):
         tags = validated_data.pop('tags')
         recipe = Recipe.objects.create(**validated_data)
         recipe.tags.set(tags)
-        ingredient_list = []
-        for ingredient_item in ingredients:
-            ingredient = get_object_or_404(
-                Ingredient, id=ingredient_item['id']
-            )
-            if ingredient in ingredient_list:
-                raise serializers.ValidationError(
-                    'Ингредиенты должны быть уникальными'
-                )
         create_ingredients = [
             IngredientRecipe(
                 ingredient=ingredient['ingredient'],
@@ -232,17 +221,14 @@ class RecipeActionializer(serializers.ModelSerializer):
             IngredientRecipe(
                 ingredient=ingredient['ingredient'],
                 recipe=instance,
-                amount=ingredient[Sum('ingredientrecipes__amount')]
-                # amount=ingredient[F('ingredientrecipes__amount')]
-                # amount=ingredient['amount']
+                amount=ingredient[Sum('amount')]
             )
             for ingredient in ingredients
         ]
-
         IngredientRecipe.objects.bulk_create(create_ingredients)
         return super().update(instance, validated_data)
 
     def to_representation(self, instance):
-        return RecipeListSerializer(
-            instance, context={'request': self.context.get('request')}
-        ).data
+        return RecipeListSerializer(instance, context={
+            'request': self.context.get('request')
+        }).data
