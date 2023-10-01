@@ -1,4 +1,5 @@
 from django.db import transaction
+from django.db.models import Sum
 from django.shortcuts import get_object_or_404
 from djoser.serializers import UserSerializer
 from drf_extra_fields.fields import Base64ImageField
@@ -8,7 +9,7 @@ from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 from user.models import CustomUser
 from user.serializers import CustomUserSerializers
-from django.db.models import Sum
+
 # from django.db.models import F
 
 
