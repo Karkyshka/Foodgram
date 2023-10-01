@@ -223,8 +223,8 @@ class RecipeActionializer(serializers.ModelSerializer):
             IngredientRecipe(
                 ingredient=ingredient['ingredient'],
                 recipe=instance,
-                amount=ingredient[F('ingredientrecipes__amount')]
-                # amount=ingredient['amount']
+                # amount=ingredient[F('ingredientrecipes__amount')]
+                amount=ingredient['amount']
             )
             for ingredient in ingredients
         ]
