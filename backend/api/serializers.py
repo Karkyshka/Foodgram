@@ -4,7 +4,7 @@ from djoser.serializers import UserSerializer
 from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
-from django.db.models import F
+# from django.db.models import F
 
 
 from recipes.models import (Favorite, Ingredient, IngredientRecipe, Recipe,
